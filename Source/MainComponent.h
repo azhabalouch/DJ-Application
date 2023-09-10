@@ -38,5 +38,11 @@ private:
 
     juce::Slider gainSlider;
 
+    juce::Random random;
+    bool playing;
+    double gain;
+    float phase;
+    double dphase;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

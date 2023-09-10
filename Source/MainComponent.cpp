@@ -30,6 +30,8 @@ MainComponent::MainComponent()
     addAndMakeVisible(gainSlider);
     gainSlider.addListener(this);
 
+    gainSlider.setRange(0, 1);
+
 }
 
 MainComponent::~MainComponent()
@@ -41,24 +43,33 @@ MainComponent::~MainComponent()
 //==============================================================================
 void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
 {
-    // This function will be called when the audio device is started, or when
-    // its settings (i.e. sample rate, block size, etc) are changed.
-
-    // You can use this function to initialise any resources you might need,
-    // but be careful - it will be called on the audio thread, not the GUI thread.
-
-    // For more details, see the help for AudioProcessor::prepareToPlay()
+    playing = false;
+    gain = 0.5;
+    phase = 0;
+    dphase = 0;
 }
 
 void MainComponent::getNextAudioBlock (const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    // Your audio-processing code goes here!
+    if (!playing)
+    {
+        bufferToFill.clearActiveBufferRegion();
+        return;
+    }
 
-    // For more details, see the help for AudioProcessor::getNextAudioBlock()
+    auto* leftChannel = bufferToFill.buffer->getWritePointer(0, bufferToFill.startSample);
+    auto* rightChannel = bufferToFill.buffer->getWritePointer(1, bufferToFill.startSample);
+    
+    for (auto i = 0; i < bufferToFill.numSamples; ++i)
+    {
+        auto sample = fmod(phase, 1.0f);
+        phase += fmod(dphase, 0.01f);
+        dphase += 0.0000005f;
+        leftChannel[i] = sample * 0.125 * gain;
+        rightChannel[i] = sample * 0.125 * gain;
+    }
 
-    // Right now we are not producing any data, in which case we need to clear the buffer
-    // (to prevent the output of random noise)
-    bufferToFill.clearActiveBufferRegion();
+    //bufferToFill.clearActiveBufferRegion();
 }
 
 void MainComponent::releaseResources()
@@ -96,22 +107,22 @@ void MainComponent::resized()
 
 void MainComponent::buttonClicked(juce::Button* button)
 {
-    if (button == &playButton) // clicked button has same memory address as playButton
+    if (button == &playButton)
     {
-        DBG(" MainComponent::buttonClicked: playButton");
+        playing = true;
+        dphase = 0;
     }
     if (button == &stopButton)
     {
-        DBG(" MainComponent::buttonClicked: stopButton");
+        playing = false;
     }
-
 }
 
 void MainComponent::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == &gainSlider)
     {
-        DBG("MainComponent::sliderValueChanged: gainSlider " << gainSlider.getValue());
+        gain = gainSlider.getValue();
     }
 
 }
