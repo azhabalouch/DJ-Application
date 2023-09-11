@@ -25,13 +25,14 @@ MainComponent::MainComponent()
     addAndMakeVisible(gainSlider);
     gainSlider.addListener(this);
 
+    addAndMakeVisible(speedSlider);
+    speedSlider.addListener(this);
+
     addAndMakeVisible(loadButton);
     loadButton.addListener(this);
     loadButton.setButtonText("LOAD");
 
-    gainSlider.setRange(0, 1);
-
-    DBG("MainComponent::resized");
+    gainSlider.setRange(0.0, 1.0);
 }
 
 MainComponent::~MainComponent()
@@ -41,22 +42,16 @@ MainComponent::~MainComponent()
 
 void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
-    playing = false;
-    gain = 0.5;
     phase = 0;
     dphase = 0;
 
     transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+    resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
 void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    if (!playing)
-    {
-        bufferToFill.clearActiveBufferRegion();
-        return;
-    }
-    transportSource.getNextAudioBlock(bufferToFill);
+    resampleSource.getNextAudioBlock(bufferToFill);
 }
 
 void MainComponent::releaseResources()
@@ -72,30 +67,24 @@ void MainComponent::paint(juce::Graphics& g)
 void MainComponent::resized()
 {
     int rowH = getHeight() / 5;
-    int colW = getWidth();
+    int width = getWidth();
 
-    playButton.setBounds(0, 0, colW, rowH);
-    stopButton.setBounds(0, rowH, colW, rowH);
-    loadButton.setBounds(0, rowH * 2, colW, rowH);
-    gainSlider.setBounds(0, rowH * 3, colW, rowH);
-
-
-    DBG("MainComponent::resized");
+    playButton.setBounds(0, 0, width, rowH);
+    stopButton.setBounds(0, rowH, width, rowH);
+    loadButton.setBounds(0, rowH * 2, width, rowH);
+    gainSlider.setBounds(0, rowH * 3, width, rowH);
+    speedSlider.setBounds(0, rowH * 4, width, rowH);
 }
 
 void MainComponent::buttonClicked(juce::Button* button)
 {
     if (button == &playButton)
     {
-        playing = true;
-        dphase = 0;
-        transportSource.setPosition(0);
         transportSource.start();
     }
 
     if (button == &stopButton)
     {
-        playing = false;
         transportSource.stop();
     }
 
@@ -115,23 +104,23 @@ void MainComponent::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == &gainSlider)
     {
-        gain = gainSlider.getValue();
-        transportSource.setGain(gain);
+        transportSource.setGain(slider->getValue());
+    }
+    if (slider == &speedSlider)
+    {
+        resampleSource.setResamplingRatio(slider->getValue());
     }
 
 }
 
 void MainComponent::loadURL(juce::URL audioURL)
 {
+
     auto* reader = formatManager.createReaderFor(audioURL.createInputStream(false));
     if (reader != nullptr)
     {
-        std::unique_ptr<juce::AudioFormatReaderSource> newSource(new juce::AudioFormatReaderSource(reader, true));
+        std::unique_ptr<juce::AudioFormatReaderSource> newSource (new juce::AudioFormatReaderSource(reader, true));
         transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
         readerSource.reset(newSource.release());
-    }
-    else
-    {
-        std::cout << "Something went wrong loading the file " << std::endl;
     }
 }

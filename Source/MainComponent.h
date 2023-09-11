@@ -20,8 +20,6 @@ public:
     void buttonClicked(juce::Button* button) override;
     void sliderValueChanged(juce::Slider* slider) override;
 
-    void loadURL(juce::URL audioURL);
-
 private:
     juce::TextButton playButton{ "Play" };
     juce::TextButton stopButton{ "Stop" };
@@ -31,10 +29,11 @@ private:
     juce::AudioFormatManager formatManager;
     std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
     juce::FileChooser fChooser{ "Select a file..." };
+    juce::Slider speedSlider;
+    juce::ResamplingAudioSource resampleSource{ &transportSource, false, 2 };
+    
+    void loadURL(juce::URL audioURL);
 
-
-    bool playing;
-    double gain;
     float phase;
     double dphase;
 
