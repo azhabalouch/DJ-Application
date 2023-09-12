@@ -1,6 +1,6 @@
 # DJ Application - Object Oriented Programming Final Project
 
-Welcome to my final project, the "DJ Application," developed as part of the Object-Oriented Programming Language course at Goldsmith University of London!
+Welcome to my final project source files, the "DJ Application," developed as part of the Object-Oriented Programming Language course at Goldsmith University of London! Using Juce Library.
 
 ## Overview
 
@@ -25,6 +25,14 @@ Here's what you'll find in this repository:
 4. **Project Milestones:** Throughout the development process, I've utilized Git and version control to track project milestones and evolution.
 
 ## Getting Started
+
+Download Juce Library -> https://juce.com/get-juce/
+
+Copy the files in User folder of you windows example. C:\Users\YourName\ -< Juce folder here
+
+Then create an Basic GUI Application using Projucer
+
+Then copy these source file in it.
 
 To explore and interact with the DJ Application, follow these steps:
 
