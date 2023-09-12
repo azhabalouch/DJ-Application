@@ -26,17 +26,17 @@ Here's what you'll find in this repository:
 
 ## Getting Started
 
-Download Juce Library -> https://juce.com/get-juce/
-
-Copy the files in User folder of you windows example. C:\Users\YourName\ -< Juce folder here
-
-Then create an Basic GUI Application using Projucer
-
-Then copy these source file in it.
-
 To explore and interact with the DJ Application, follow these steps:
 
-1. **Clone the Repository:** Begin by cloning this repository to your local machine:
+1. Download Juce Library -> https://juce.com/get-juce/
+
+2. Extract and Copy the Juce Folder in your windows User location example. C:\Users\YourName\ -< Juce folder here
+
+3. Then create a Blank Audio Application using Projucer.
+
+4. Then copy all of these source files in it or use clone method.
+
+**Clone the Repository:** Begin by cloning this repository to your local machine:
 
    ```bash
    git clone https://github.com/aazhaa/DJ-Application.git
