@@ -56,7 +56,7 @@ void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
 
 void MainComponent::releaseResources()
 {
-    transportSource.releaseResources();
+    resampleSource.releaseResources();
 }
 
 void MainComponent::paint(juce::Graphics& g)
@@ -104,7 +104,7 @@ void MainComponent::sliderValueChanged(juce::Slider* slider)
 {
     if (slider == &gainSlider)
     {
-        transportSource.setGain(slider->getValue());
+        transportSource.setGain(static_cast<float>(slider->getValue()));;
     }
     if (slider == &speedSlider)
     {
