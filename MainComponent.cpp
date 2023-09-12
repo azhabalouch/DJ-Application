@@ -3,10 +3,10 @@
 MainComponent::MainComponent()
 {
     setSize(800, 600);
-    if (juce::RuntimePermissions::isRequired(juce::RuntimePermissions::recordAudio)
-        && !juce::RuntimePermissions::isGranted(juce::RuntimePermissions::recordAudio))
+    if (RuntimePermissions::isRequired(RuntimePermissions::recordAudio)
+        && !RuntimePermissions::isGranted(RuntimePermissions::recordAudio))
     {
-        juce::RuntimePermissions::request(juce::RuntimePermissions::recordAudio,
+        RuntimePermissions::request(RuntimePermissions::recordAudio,
             [&](bool granted) { setAudioChannels(granted ? 2 : 0, 2); });
     }
     else
@@ -49,7 +49,7 @@ void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate
     resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
-void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
+void MainComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
 {
     resampleSource.getNextAudioBlock(bufferToFill);
 }
@@ -59,9 +59,9 @@ void MainComponent::releaseResources()
     resampleSource.releaseResources();
 }
 
-void MainComponent::paint(juce::Graphics& g)
+void MainComponent::paint(Graphics& g)
 {
-    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+    g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 }
 
 void MainComponent::resized()
@@ -76,7 +76,7 @@ void MainComponent::resized()
     speedSlider.setBounds(0, rowH * 4, width, rowH);
 }
 
-void MainComponent::buttonClicked(juce::Button* button)
+void MainComponent::buttonClicked(Button* button)
 {
     if (button == &playButton)
     {
@@ -90,17 +90,17 @@ void MainComponent::buttonClicked(juce::Button* button)
 
     if (button == &loadButton)
     {
-        auto fileChooserFlags = juce::FileBrowserComponent::canSelectFiles;
+        auto fileChooserFlags = FileBrowserComponent::canSelectFiles;
         fChooser.launchAsync(fileChooserFlags,
-            [this](const juce::FileChooser& chooser)
+            [this](const FileChooser& chooser)
             {
                 auto chosenFile = chooser.getResult();
-                loadURL(juce::URL{ chosenFile });
+                loadURL(URL{ chosenFile });
             });
     }
 }
 
-void MainComponent::sliderValueChanged(juce::Slider* slider)
+void MainComponent::sliderValueChanged(Slider* slider)
 {
     if (slider == &gainSlider)
     {
@@ -113,13 +113,13 @@ void MainComponent::sliderValueChanged(juce::Slider* slider)
 
 }
 
-void MainComponent::loadURL(juce::URL audioURL)
+void MainComponent::loadURL(URL audioURL)
 {
 
     auto* reader = formatManager.createReaderFor(audioURL.createInputStream(false));
     if (reader != nullptr)
     {
-        std::unique_ptr<juce::AudioFormatReaderSource> newSource (new juce::AudioFormatReaderSource(reader, true));
+        std::unique_ptr<AudioFormatReaderSource> newSource (new AudioFormatReaderSource(reader, true));
         transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
         readerSource.reset(newSource.release());
     }

@@ -2,37 +2,39 @@
 
 #include <JuceHeader.h>
 
-class MainComponent : public juce::AudioAppComponent,
-    public juce::Button::Listener,
-    public juce::Slider::Listener
+using namespace juce;  // Add this line to simplify namespace usage
+
+class MainComponent : public AudioAppComponent,
+    public Button::Listener,
+    public Slider::Listener
 {
 public:
     MainComponent();
     ~MainComponent() override;
 
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override;
-    void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override;
+    void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
 
-    void paint(juce::Graphics& g) override;
+    void paint(Graphics& g) override;
     void resized() override;
 
-    void buttonClicked(juce::Button* button) override;
-    void sliderValueChanged(juce::Slider* slider) override;
+    void buttonClicked(Button* button) override;
+    void sliderValueChanged(Slider* slider) override;
 
 private:
-    juce::TextButton playButton{ "Play" };
-    juce::TextButton stopButton{ "Stop" };
-    juce::TextButton loadButton;
-    juce::Slider gainSlider;
-    juce::AudioTransportSource transportSource;
-    juce::AudioFormatManager formatManager;
-    std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
-    juce::FileChooser fChooser{ "Select a file..." };
-    juce::Slider speedSlider;
-    juce::ResamplingAudioSource resampleSource{ &transportSource, false, 2 };
-    
-    void loadURL(juce::URL audioURL);
+    TextButton playButton{ "Play" };
+    TextButton stopButton{ "Stop" };
+    TextButton loadButton;
+    Slider gainSlider;
+    AudioTransportSource transportSource;
+    AudioFormatManager formatManager;
+    std::unique_ptr<AudioFormatReaderSource> readerSource;
+    FileChooser fChooser{ "Select a file..." };
+    Slider speedSlider;
+    ResamplingAudioSource resampleSource{ &transportSource, false, 2 };
+
+    void loadURL(URL audioURL);
 
     float phase;
     double dphase;
