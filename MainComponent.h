@@ -1,8 +1,9 @@
 #pragma once
 
-#include <JuceHeader.h>
+#include "../JuceLibraryCode/JuceHeader.h"
+#include "DjAudioPlayer.h"
 
-using namespace juce;  // Add this line to simplify namespace usage
+using namespace juce;
 
 class MainComponent : public AudioAppComponent,
     public Button::Listener,
@@ -23,21 +24,16 @@ public:
     void sliderValueChanged(Slider* slider) override;
 
 private:
+    DjAudioPlayer player1; // Adding DJAudioPlayer as a data member
+
     TextButton playButton{ "Play" };
     TextButton stopButton{ "Stop" };
-    TextButton loadButton;
+    TextButton loadButton{ "Load" }; // Corrected the button text
     Slider gainSlider;
-    AudioTransportSource transportSource;
-    AudioFormatManager formatManager;
-    std::unique_ptr<AudioFormatReaderSource> readerSource;
-    FileChooser fChooser{ "Select a file..." };
     Slider speedSlider;
-    ResamplingAudioSource resampleSource{ &transportSource, false, 2 };
+    Slider posSlider;
 
-    void loadURL(URL audioURL);
-
-    float phase;
-    double dphase;
+    FileChooser fChooser{ "Select a file..." };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

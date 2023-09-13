@@ -14,8 +14,6 @@ MainComponent::MainComponent()
         setAudioChannels(2, 2);
     }
 
-    formatManager.registerBasicFormats();
-
     addAndMakeVisible(playButton);
     playButton.addListener(this);
 
@@ -28,11 +26,14 @@ MainComponent::MainComponent()
     addAndMakeVisible(speedSlider);
     speedSlider.addListener(this);
 
+    addAndMakeVisible(posSlider);
+    posSlider.addListener(this);
+
     addAndMakeVisible(loadButton);
     loadButton.addListener(this);
-    loadButton.setButtonText("LOAD");
 
     gainSlider.setRange(0.0, 1.0);
+    posSlider.setRange(0.0, 1.0);
 }
 
 MainComponent::~MainComponent()
@@ -42,21 +43,17 @@ MainComponent::~MainComponent()
 
 void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
-    phase = 0;
-    dphase = 0;
-
-    transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
-    resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+    player1.prepareToPlay(samplesPerBlockExpected, sampleRate); // Delegating to DJAudioPlayer
 }
 
 void MainComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
 {
-    resampleSource.getNextAudioBlock(bufferToFill);
+    player1.getNextAudioBlock(bufferToFill); // Delegating to DJAudioPlayer
 }
 
 void MainComponent::releaseResources()
 {
-    resampleSource.releaseResources();
+    player1.releaseResources(); // Delegating to DJAudioPlayer
 }
 
 void MainComponent::paint(Graphics& g)
@@ -66,36 +63,38 @@ void MainComponent::paint(Graphics& g)
 
 void MainComponent::resized()
 {
-    int rowH = getHeight() / 5;
+    int rowH = getHeight() / 6;
     int width = getWidth();
 
     playButton.setBounds(0, 0, width, rowH);
     stopButton.setBounds(0, rowH, width, rowH);
-    loadButton.setBounds(0, rowH * 2, width, rowH);
-    gainSlider.setBounds(0, rowH * 3, width, rowH);
-    speedSlider.setBounds(0, rowH * 4, width, rowH);
+    gainSlider.setBounds(0, rowH * 2, width, rowH);
+    speedSlider.setBounds(0, rowH * 3, width, rowH);
+    posSlider.setBounds(0, rowH * 4, width, rowH);
+    loadButton.setBounds(0, rowH * 5, width, rowH);
 }
 
 void MainComponent::buttonClicked(Button* button)
 {
     if (button == &playButton)
     {
-        transportSource.start();
+        player1.play(); // Delegating to DJAudioPlayer
     }
 
     if (button == &stopButton)
     {
-        transportSource.stop();
+        player1.stop(); // Delegating to DJAudioPlayer
     }
 
     if (button == &loadButton)
     {
         auto fileChooserFlags = FileBrowserComponent::canSelectFiles;
+        
         fChooser.launchAsync(fileChooserFlags,
             [this](const FileChooser& chooser)
             {
-                auto chosenFile = chooser.getResult();
-                loadURL(URL{ chosenFile });
+                URL audioURL = URL{ chooser.getResult() };
+                player1.loadURL(audioURL);
             });
     }
 }
@@ -104,23 +103,14 @@ void MainComponent::sliderValueChanged(Slider* slider)
 {
     if (slider == &gainSlider)
     {
-        transportSource.setGain(static_cast<float>(slider->getValue()));;
+        player1.setGain(static_cast<float>(slider->getValue())); // Delegating to DJAudioPlayer
     }
     if (slider == &speedSlider)
     {
-        resampleSource.setResamplingRatio(slider->getValue());
+        player1.setSpeed(slider->getValue()); // Delegating to DJAudioPlayer
     }
-
-}
-
-void MainComponent::loadURL(URL audioURL)
-{
-
-    auto* reader = formatManager.createReaderFor(audioURL.createInputStream(false));
-    if (reader != nullptr)
+    if (slider == &posSlider)
     {
-        std::unique_ptr<AudioFormatReaderSource> newSource (new AudioFormatReaderSource(reader, true));
-        transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate);
-        readerSource.reset(newSource.release());
+        player1.setRelativePosition(slider->getValue()); // Delegating to DJAudioPlayer
     }
 }
