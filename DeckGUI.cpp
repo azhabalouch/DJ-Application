@@ -12,6 +12,8 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer 
     addAndMakeVisible(positionSlider);
     addAndMakeVisible(speedSlider);
 
+    speedSlider.setLookAndFeel(&customLookAndFeel);
+
     playButton.addListener(this);
     stopButton.addListener(this);
     volumeSlider.addListener(this);
@@ -49,7 +51,15 @@ void DeckGUI::resized()
     playButton.setBounds(0, 0, getWidth(), rowH);
     stopButton.setBounds(0, rowH, getWidth(), rowH);
     volumeSlider.setBounds(0, rowH * 2, getWidth(), rowH);
-    speedSlider.setBounds(0, rowH * 3, getWidth(), rowH);
+
+    speedSlider.setBounds(0, rowH * 3, 120, 130);
+    speedSlider.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    speedSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
+    speedSlider.setNumDecimalPlacesToDisplay(0);
+    speedSlider.setTextBoxIsEditable(false);
+    speedSlider.setRange(0, 100);
+
+
     positionSlider.setBounds(0, rowH * 4, getWidth(), rowH);
     loadButton.setBounds(0, rowH * 5, getWidth(), rowH);
 }

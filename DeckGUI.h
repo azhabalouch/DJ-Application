@@ -2,6 +2,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DJAudioPlayer.h"
+#include "CustomLookAndFeel.h"
 
 using namespace juce;
 
@@ -21,6 +22,8 @@ public:
 
 private:
     DjAudioPlayer* djAudioPlayer;
+
+    CustomLookAndFeel customLookAndFeel;
 
     TextButton playButton{ "Play" };
     TextButton stopButton{ "Stop" };

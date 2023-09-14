@@ -2,7 +2,7 @@
 
 MainComponent::MainComponent()
 {
-    setSize(800, 600);
+    setSize(1024, 768);
     if (RuntimePermissions::isRequired(RuntimePermissions::recordAudio)
         && !RuntimePermissions::isGranted(RuntimePermissions::recordAudio))
     {
