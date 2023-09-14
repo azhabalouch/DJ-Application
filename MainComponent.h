@@ -2,12 +2,11 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DjAudioPlayer.h"
+#include "DeckGUI.h"
 
 using namespace juce;
 
-class MainComponent : public AudioAppComponent,
-    public Button::Listener,
-    public Slider::Listener
+class MainComponent : public AudioAppComponent
 {
 public:
     MainComponent();
@@ -20,20 +19,14 @@ public:
     void paint(Graphics& g) override;
     void resized() override;
 
-    void buttonClicked(Button* button) override;
-    void sliderValueChanged(Slider* slider) override;
-
 private:
-    DjAudioPlayer player1; // Adding DJAudioPlayer as a data member
+    DjAudioPlayer player1;
+    DeckGUI deck1{ &player1 };
 
-    TextButton playButton{ "Play" };
-    TextButton stopButton{ "Stop" };
-    TextButton loadButton{ "Load" }; // Corrected the button text
-    Slider gainSlider;
-    Slider speedSlider;
-    Slider posSlider;
+    DjAudioPlayer player2;
+    DeckGUI deck2{ &player2 };
 
-    FileChooser fChooser{ "Select a file..." };
+    MixerAudioSource mixerSource;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };

@@ -14,26 +14,9 @@ MainComponent::MainComponent()
         setAudioChannels(2, 2);
     }
 
-    addAndMakeVisible(playButton);
-    playButton.addListener(this);
 
-    addAndMakeVisible(stopButton);
-    stopButton.addListener(this);
-
-    addAndMakeVisible(gainSlider);
-    gainSlider.addListener(this);
-
-    addAndMakeVisible(speedSlider);
-    speedSlider.addListener(this);
-
-    addAndMakeVisible(posSlider);
-    posSlider.addListener(this);
-
-    addAndMakeVisible(loadButton);
-    loadButton.addListener(this);
-
-    gainSlider.setRange(0.0, 1.0);
-    posSlider.setRange(0.0, 1.0);
+    addAndMakeVisible(deck1);
+    addAndMakeVisible(deck2);
 }
 
 MainComponent::~MainComponent()
@@ -43,17 +26,23 @@ MainComponent::~MainComponent()
 
 void MainComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
-    player1.prepareToPlay(samplesPerBlockExpected, sampleRate); // Delegating to DJAudioPlayer
+    mixerSource.addInputSource(&player1, false);
+    mixerSource.addInputSource(&player2, false);
+    
+    mixerSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
 void MainComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill)
 {
-    player1.getNextAudioBlock(bufferToFill); // Delegating to DJAudioPlayer
+    mixerSource.getNextAudioBlock(bufferToFill);
 }
 
 void MainComponent::releaseResources()
 {
-    player1.releaseResources(); // Delegating to DJAudioPlayer
+    mixerSource.removeAllInputs();
+    mixerSource.releaseResources();
+    player1.releaseResources();
+    player2.releaseResources();
 }
 
 void MainComponent::paint(Graphics& g)
@@ -63,54 +52,6 @@ void MainComponent::paint(Graphics& g)
 
 void MainComponent::resized()
 {
-    int rowH = getHeight() / 6;
-    int width = getWidth();
-
-    playButton.setBounds(0, 0, width, rowH);
-    stopButton.setBounds(0, rowH, width, rowH);
-    gainSlider.setBounds(0, rowH * 2, width, rowH);
-    speedSlider.setBounds(0, rowH * 3, width, rowH);
-    posSlider.setBounds(0, rowH * 4, width, rowH);
-    loadButton.setBounds(0, rowH * 5, width, rowH);
-}
-
-void MainComponent::buttonClicked(Button* button)
-{
-    if (button == &playButton)
-    {
-        player1.play(); // Delegating to DJAudioPlayer
-    }
-
-    if (button == &stopButton)
-    {
-        player1.stop(); // Delegating to DJAudioPlayer
-    }
-
-    if (button == &loadButton)
-    {
-        auto fileChooserFlags = FileBrowserComponent::canSelectFiles;
-        
-        fChooser.launchAsync(fileChooserFlags,
-            [this](const FileChooser& chooser)
-            {
-                URL audioURL = URL{ chooser.getResult() };
-                player1.loadURL(audioURL);
-            });
-    }
-}
-
-void MainComponent::sliderValueChanged(Slider* slider)
-{
-    if (slider == &gainSlider)
-    {
-        player1.setGain(static_cast<float>(slider->getValue())); // Delegating to DJAudioPlayer
-    }
-    if (slider == &speedSlider)
-    {
-        player1.setSpeed(slider->getValue()); // Delegating to DJAudioPlayer
-    }
-    if (slider == &posSlider)
-    {
-        player1.setRelativePosition(slider->getValue()); // Delegating to DJAudioPlayer
-    }
+    deck1.setBounds(0, 0, getWidth() / 2, getHeight());
+    deck2.setBounds(getWidth() / 2, 0, getWidth() / 2, getHeight());
 }
