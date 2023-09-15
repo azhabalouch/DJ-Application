@@ -13,7 +13,6 @@ void DjAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate
 
     soundTouch.setSampleRate(sampleRate);
     soundTouch.setChannels(2);
-
 }
 
 void DjAudioPlayer::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) {

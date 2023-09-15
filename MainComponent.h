@@ -19,6 +19,8 @@ public:
     void paint(Graphics& g) override;
     void resized() override;
 
+    
+
 private:
     DjAudioPlayer player1;
     DeckGUI deck1{ &player1 };

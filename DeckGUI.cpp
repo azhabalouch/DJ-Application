@@ -3,6 +3,32 @@
 
 DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer }
 {
+    // Load your image
+    Image backgroundImage = ImageCache::getFromMemory(BinaryData::Background2_jpg, BinaryData::Background2_jpgSize);
+
+    // Create a DrawableImage
+    DrawableImage drawableImage;
+    drawableImage.setImage(backgroundImage);
+
+    // Set a semi-transparent black overlay colour
+    drawableImage.setOverlayColour(Colour::fromRGBA(0, 0, 0, 127));  // RGBA values range from 0 to 255
+
+    // Create a new image with the same size as the original one
+    Image newImage(Image::RGB, backgroundImage.getWidth(), backgroundImage.getHeight(), true);
+
+    // Create a Graphics context from the new image
+    Graphics g(newImage);
+
+    // Draw the DrawableImage onto the new image
+    drawableImage.draw(g, 1.0f);
+
+    // Now you can use newImage with your ImageComponent
+    backgroundImageComponent.setImage(newImage);
+    backgroundImageComponent.setBounds(getLocalBounds());
+    backgroundImageComponent.setImagePlacement(RectanglePlacement::stretchToFit);
+    addAndMakeVisible(backgroundImageComponent);
+
+
     // In your constructor, you should add any child components, and
     // initialise any special settings that your component needs.
     addAndMakeVisible(playButton);
@@ -67,6 +93,8 @@ void DeckGUI::paint (juce::Graphics& g)
 
 void DeckGUI::resized()
 {
+    backgroundImageComponent.setBounds(getLocalBounds());
+
     // This method is where you should set the bounds of any child
     // components that your component contains..
 

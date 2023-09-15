@@ -34,6 +34,8 @@ private:
 
     CustomLookAndFeel3 customLookAndFeel3;
 
+    ImageComponent backgroundImageComponent;
+
     TextButton playButton{ "Play" };
     TextButton stopButton{ "Stop" };
     TextButton loadButton{ "Load" };
