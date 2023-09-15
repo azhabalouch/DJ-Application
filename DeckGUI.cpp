@@ -26,6 +26,12 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer 
 
     //Volume Slider
     addAndMakeVisible(volumeSlider);
+    volumeSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
+    volumeSlider.setLookAndFeel(&customLookAndFeel3);
+    volumeSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
+    volumeSlider.setNumDecimalPlacesToDisplay(1);
+    volumeSlider.setTextBoxIsEditable(true);
+    volumeSlider.setRange(0.0, 10.0);
     volumeSlider.addListener(this);
 
     //Speed Slider
@@ -65,18 +71,22 @@ void DeckGUI::resized()
     // components that your component contains..
 
     int rowH = getHeight() / 6;
+    int buttonH = rowH / 3;
+    int buttonW = getWidth() / 3;
 
-    playButton.setBounds(0, 0, getWidth(), rowH);
-    stopButton.setBounds(0, rowH, getWidth(), rowH);
+    int centerW = (getWidth() / 2) - (buttonW / 2);
+    int paddingH = 50;
 
-    speedSlider.setBounds(0, rowH * 2, 120, 130);
+    speedSlider.setBounds(getWidth() / 2, rowH * 1, 110, 130);
 
-    pitchSlider.setBounds(0, rowH * 3, 120, 130);
-    pitchToggleButton.setBounds(100, rowH * 3, 150, 90);
+    pitchSlider.setBounds(getWidth() / 2, rowH * 2, 110, 130);
+    pitchToggleButton.setBounds(getWidth()/2 + 100, (rowH * 2) + 50, 150, 50);
 
-    volumeSlider.setBounds(0, rowH * 4, getWidth(), rowH);
+    volumeSlider.setBounds(getWidth() / 2 - 100, rowH * 1, 40, (rowH + 2) * 2);
 
-    loadButton.setBounds(0, rowH * 5, getWidth(), rowH);
+    playButton.setBounds(centerW, (rowH * 3) + paddingH, buttonW, buttonH);
+    stopButton.setBounds(centerW, (rowH * 4) + paddingH, buttonW, buttonH);
+    loadButton.setBounds(centerW, (rowH * 5) + paddingH, buttonW, buttonH);
 }
 
 void DeckGUI::buttonClicked(Button* button)
