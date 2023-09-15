@@ -8,21 +8,33 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer 
     addAndMakeVisible(playButton);
     addAndMakeVisible(stopButton);
     addAndMakeVisible(loadButton);
-    addAndMakeVisible(volumeSlider);
     addAndMakeVisible(positionSlider);
-    addAndMakeVisible(speedSlider);
 
+    //Volume Slider
+    addAndMakeVisible(volumeSlider);
+    volumeSlider.setLookAndFeel(&customLookAndFeel2);
+    volumeSlider.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    volumeSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
+    volumeSlider.setNumDecimalPlacesToDisplay(1);
+    volumeSlider.setRange(0.0, 2.0);
+    volumeSlider.lookAndFeelChanged();
+    volumeSlider.addListener(this);
+
+    //Speed Slider
+    addAndMakeVisible(speedSlider);
     speedSlider.setLookAndFeel(&customLookAndFeel);
+    speedSlider.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    speedSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
+    speedSlider.setNumDecimalPlacesToDisplay(0);
+    speedSlider.setRange(0.0, 10.0);
+    speedSlider.lookAndFeelChanged();
+    speedSlider.addListener(this);
 
     playButton.addListener(this);
     stopButton.addListener(this);
-    volumeSlider.addListener(this);
     positionSlider.addListener(this);
-    speedSlider.addListener(this);
+    
     loadButton.addListener(this);
-
-    speedSlider.setRange(0.0, 10.0);
-    volumeSlider.setRange(0.0, 2.0);
 }
 
 DeckGUI::~DeckGUI()
@@ -50,15 +62,10 @@ void DeckGUI::resized()
 
     playButton.setBounds(0, 0, getWidth(), rowH);
     stopButton.setBounds(0, rowH, getWidth(), rowH);
-    volumeSlider.setBounds(0, rowH * 2, getWidth(), rowH);
+
+    volumeSlider.setBounds(0, rowH * 2, 120, 130);
 
     speedSlider.setBounds(0, rowH * 3, 120, 130);
-    speedSlider.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    speedSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
-    speedSlider.setNumDecimalPlacesToDisplay(0);
-    speedSlider.setTextBoxIsEditable(false);
-    speedSlider.setRange(0, 100);
-
 
     positionSlider.setBounds(0, rowH * 4, getWidth(), rowH);
     loadButton.setBounds(0, rowH * 5, getWidth(), rowH);
