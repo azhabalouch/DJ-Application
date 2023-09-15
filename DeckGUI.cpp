@@ -15,6 +15,7 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer 
 
     //Pitch Slider
     addAndMakeVisible(pitchSlider);
+    pitchSlider.setEnabled(false); // disable by default
     pitchSlider.setLookAndFeel(&customLookAndFeel2);
     pitchSlider.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     pitchSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
@@ -131,7 +132,7 @@ void DeckGUI::sliderValueChanged(Slider* slider)
     }*/
 }
 
-void DeckGUI::togglePitch(){
+void DeckGUI::togglePitch() {
     if (pitchSlider.isEnabled())
     {
         // Disable the pitch slider

@@ -19,7 +19,7 @@ void DjAudioPlayer::prepareToPlay(int samplesPerBlockExpected, double sampleRate
 void DjAudioPlayer::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) {
     resampleSource.getNextAudioBlock(bufferToFill);
 
-    if (!bypassSoundTouch) {
+    if (bypassSoundTouch) {
         // Convert JUCE's AudioBuffer to SoundTouch's SAMPLETYPE
         // This will depend on your application and how you're using JUCE's AudioBuffer
 
@@ -68,11 +68,11 @@ void DjAudioPlayer::setPitch(double pitchShiftAmount)
 {
     if (pitchShiftAmount == 1.0f) {
         // Bypass SoundTouch processing
-        bypassSoundTouch = true;
+        bypassSoundTouch = false;
     }
     else {
         soundTouch.setPitch(pitchShiftAmount);
-        bypassSoundTouch = false;
+        bypassSoundTouch = true;
     }
 }
 
