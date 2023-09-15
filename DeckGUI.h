@@ -21,6 +21,9 @@ public:
     void buttonClicked(Button* button) override;
     void sliderValueChanged(Slider* slider) override;
 
+    void togglePitch();
+
+
 private:
     DjAudioPlayer* djAudioPlayer;
 
@@ -31,9 +34,13 @@ private:
     TextButton playButton{ "Play" };
     TextButton stopButton{ "Stop" };
     TextButton loadButton{ "Load" };
+
+    TextButton pitchToggleButton{ "Toggle Pitch" };
+
     Slider volumeSlider;
-    Slider positionSlider;
+    Slider pitchSlider;
     Slider speedSlider;
+
     FileChooser fChooser{ "Select a file..." };
 
 

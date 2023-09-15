@@ -1,5 +1,6 @@
 #pragma once
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
+#include "ea_soundtouch/ea_soundtouch.h"
 
 using namespace juce;  // Add this line to simplify namespace usage
 
@@ -22,10 +23,12 @@ public:
     void setRelativePosition(double pos);
 
     // Set the gain (volume) between 0 and 1
-    void setGain(double gain);
+    void setGain(float gain);
 
     // Set the playback speed ratio (1.0 is normal speed)
     void setSpeed(double ratio);
+
+    void setPitch(double pitchShiftAmount);
 
     // Implementations for the AudioSource interface
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override;
@@ -33,6 +36,10 @@ public:
     void releaseResources() override;
 
 private:
+    soundtouch::SoundTouch soundTouch;
+
+    bool bypassSoundTouch = false;
+
     AudioFormatManager formatManager;
     std::unique_ptr<AudioFormatReaderSource> readerSource;
     AudioTransportSource transportSource;

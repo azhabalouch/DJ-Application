@@ -8,15 +8,23 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer 
     addAndMakeVisible(playButton);
     addAndMakeVisible(stopButton);
     addAndMakeVisible(loadButton);
-    addAndMakeVisible(positionSlider);
+    
+    //On or Off
+    addAndMakeVisible(pitchToggleButton);
+    pitchToggleButton.onClick = [this] { togglePitch(); };
+
+    //Pitch Slider
+    addAndMakeVisible(pitchSlider);
+    pitchSlider.setLookAndFeel(&customLookAndFeel2);
+    pitchSlider.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    pitchSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
+    pitchSlider.setNumDecimalPlacesToDisplay(1);
+    pitchSlider.setTextBoxIsEditable(true);
+    pitchSlider.setRange(0.5, 2);
+    pitchSlider.addListener(this);
 
     //Volume Slider
     addAndMakeVisible(volumeSlider);
-    volumeSlider.setLookAndFeel(&customLookAndFeel2);
-    volumeSlider.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    volumeSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
-    volumeSlider.setNumDecimalPlacesToDisplay(1);
-    volumeSlider.setRange(0.0, 2.0);
     volumeSlider.addListener(this);
 
     //Speed Slider
@@ -25,13 +33,12 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer 
     speedSlider.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     speedSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
     speedSlider.setNumDecimalPlacesToDisplay(0);
+    speedSlider.setTextBoxIsEditable(true);
     speedSlider.setRange(0.0, 10.0);
     speedSlider.addListener(this);
 
     playButton.addListener(this);
     stopButton.addListener(this);
-    positionSlider.addListener(this);
-    
     loadButton.addListener(this);
 }
 
@@ -63,9 +70,11 @@ void DeckGUI::resized()
 
     speedSlider.setBounds(0, rowH * 2, 120, 130);
 
-    volumeSlider.setBounds(0, rowH * 3, 120, 130);
+    pitchSlider.setBounds(0, rowH * 3, 120, 130);
+    pitchToggleButton.setBounds(100, rowH * 3, 150, 90);
 
-    positionSlider.setBounds(0, rowH * 4, getWidth(), rowH);
+    volumeSlider.setBounds(0, rowH * 4, getWidth(), rowH);
+
     loadButton.setBounds(0, rowH * 5, getWidth(), rowH);
 }
 
@@ -106,8 +115,33 @@ void DeckGUI::sliderValueChanged(Slider* slider)
     {
         djAudioPlayer->setSpeed(slider->getValue());
     }
-    if (slider == &positionSlider)
+    if (slider == &pitchSlider)
+    {
+        if (pitchSlider.isEnabled()) {
+            djAudioPlayer->setPitch(slider->getValue());
+        }
+        else
+        {
+            djAudioPlayer->setPitch(1.0f);
+        }
+    }
+    /*if (slider == &positionSlider)
     {
         djAudioPlayer->setRelativePosition(slider->getValue());
+    }*/
+}
+
+void DeckGUI::togglePitch(){
+    if (pitchSlider.isEnabled())
+    {
+        // Disable the pitch slider
+        pitchSlider.setEnabled(false);
     }
+    else
+    {
+        // Enable the pitch slider
+        pitchSlider.setEnabled(true);
+    }
+
+    sliderValueChanged(&pitchSlider);
 }
