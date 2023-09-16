@@ -14,9 +14,10 @@ MainComponent::MainComponent()
         setAudioChannels(2, 2);
     }
 
-
     addAndMakeVisible(deck1);
     addAndMakeVisible(deck2);
+
+    formatManager.registerBasicFormats();
 }
 
 MainComponent::~MainComponent()
@@ -44,11 +45,6 @@ void MainComponent::releaseResources()
     player1.releaseResources();
     player2.releaseResources();
 }
-
-void MainComponent::paint(Graphics& g)
-{
-}
-
 
 void MainComponent::resized()
 {

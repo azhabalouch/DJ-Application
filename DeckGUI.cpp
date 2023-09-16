@@ -1,26 +1,20 @@
-#include <JuceHeader.h>
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "DeckGUI.h"
 
 
-DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer }
+DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer,
+    AudioFormatManager& formatManagerToUse,
+    AudioThumbnailCache& cacheToUse)
+    : djAudioPlayer(_djAudioPlayer),
+      waveformDisplay(formatManagerToUse, cacheToUse)
 {
-    // Load your image
+    // Setting Background image
     Image backgroundImage = ImageCache::getFromMemory(BinaryData::Background2_jpg, BinaryData::Background2_jpgSize);
-
-    // Create a DrawableImage
     DrawableImage drawableImage;
     drawableImage.setImage(backgroundImage);
-
-    // Set a semi-transparent black overlay colour
     drawableImage.setOverlayColour(Colour::fromRGBA(0, 0, 0, 127));  // RGBA values range from 0 to 255
-
-    // Create a new image with the same size as the original one
     Image newImage(Image::RGB, backgroundImage.getWidth(), backgroundImage.getHeight(), true);
-
-    // Create a Graphics context from the new image
     Graphics g(newImage);
-
-    // Draw the DrawableImage onto the new image
     drawableImage.draw(g, 1.0f);
 
     // Now you can use newImage with your ImageComponent
@@ -28,7 +22,7 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer 
     backgroundImageComponent.setBounds(getLocalBounds());
     backgroundImageComponent.setImagePlacement(RectanglePlacement::stretchToFit);
     addAndMakeVisible(backgroundImageComponent);
-    
+
     //On or Off
     addAndMakeVisible(pitchToggleButton);
     pitchToggleButton.setLookAndFeel(&pToggleOffTheme);
@@ -73,13 +67,21 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer 
     addAndMakeVisible(reverbSlider);
     reverbSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
     reverbSlider.setLookAndFeel(&volumeSliderTheme); //Reusing the Volume Slider Theme as it should be same to
-                                                     //achieve UI Design.
+    //achieve UI Design.
     reverbSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
     reverbSlider.setNumDecimalPlacesToDisplay(1);
     reverbSlider.setTextBoxIsEditable(true);
     reverbSlider.setRange(0.0, 1.0, 0.01);
     reverbSlider.setValue(0.0);  // Initial value
     reverbSlider.addListener(this);
+
+    //WaveForm Display
+    addAndMakeVisible(waveformDisplay);
+
+    //Position Slider
+    addAndMakeVisible(positionSlider);
+    positionSlider.setRange(0.0, 1.0, 0.01);
+    positionSlider.addListener(this);
 
     //Play Button
     addAndMakeVisible(playButton);
@@ -120,14 +122,14 @@ void DeckGUI::resized()
     // This method is where you should set the bounds of any child
     // components that your component contains..
 
-    int rowH = getHeight() / 6;
+    int rowH = getHeight() / 8;
     int buttonH = 50;
     int buttonW = 100;
 
     int buttonX = getWidth() / 2 - buttonW / 2;
-    int buttonY = rowH * 4;
+    int buttonY = rowH * 6;
 
-    int paddingH = 80;
+    int paddingH = 50;
     int paddingW = 70;
 
     int BarSliderH = (rowH + 2) * 2;
@@ -139,19 +141,24 @@ void DeckGUI::resized()
     int rotateSlideH = 130;
     int rotateSlideW = 110;
 
+    int wavePadding = 15;
+
     int tButtonH = 30;
     int tButtonW = 55;
 
-    speedSlider.setBounds(SliderX, SliderY / 2, rotateSlideW, rotateSlideH);
-    pitchSlider.setBounds(SliderX, SliderY - 50, rotateSlideW, rotateSlideH);
-    pitchToggleButton.setBounds(SliderX + 125, SliderY, tButtonW, tButtonH);
+    waveformDisplay.setBounds(wavePadding, wavePadding, getWidth() - 2*wavePadding, (rowH * 2) - wavePadding);
+    positionSlider.setBounds(wavePadding, rowH * 2, getWidth() - wavePadding, rowH - wavePadding);
 
-    volumeSlider.setBounds(SliderX - 100, SliderY / 2, BarSliderW, BarSliderH);
-    reverbSlider.setBounds(SliderX - 200, SliderY / 2, BarSliderW, BarSliderH);
+    speedSlider.setBounds(SliderX, SliderY, rotateSlideW, rotateSlideH);
+    pitchSlider.setBounds(SliderX, SliderY + 125, rotateSlideW, rotateSlideH);
+    pitchToggleButton.setBounds(SliderX + 125, SliderY + 175, tButtonW, tButtonH);
+
+    volumeSlider.setBounds(SliderX - 100, SliderY, BarSliderW, BarSliderH);
+    reverbSlider.setBounds(SliderX - 200, SliderY, BarSliderW, BarSliderH);
 
     playButton.setBounds(buttonX - paddingW, buttonY + paddingH, buttonW, buttonH);
     stopButton.setBounds(buttonX + paddingW, buttonY + paddingH, buttonW, buttonH);
-    loadButton.setBounds(buttonX, buttonY + 2 * paddingH, buttonW, buttonH);
+    loadButton.setBounds(buttonX, buttonY + (2 * paddingH) + 20, buttonW, buttonH);
 }
 
 void DeckGUI::buttonClicked(Button* button)
@@ -177,6 +184,7 @@ void DeckGUI::buttonClicked(Button* button)
             {
                 URL audioURL = URL{ chooser.getResult() };
                 djAudioPlayer->loadURL(audioURL);
+                waveformDisplay.loadURL(URL{ chooser.getResult() });
             });
     }
 }
@@ -211,10 +219,10 @@ void DeckGUI::sliderValueChanged(Slider* slider)
         }
         
     }
-    /*if (slider == &positionSlider)
+    if (slider == &positionSlider)
     {
         djAudioPlayer->setRelativePosition(slider->getValue());
-    }*/
+    }
 }
 
 void DeckGUI::togglePitch() {
@@ -233,3 +241,18 @@ void DeckGUI::togglePitch() {
 
     sliderValueChanged(&pitchSlider);
 }
+
+bool DeckGUI::isInterestedInFileDrag(const StringArray& files)
+{
+    return true;
+}
+
+void DeckGUI::filesDropped(const StringArray& files, int x, int y)
+{
+    for (String filename : files)
+    {
+        URL fileURL = URL{ File{filename} };
+        djAudioPlayer->loadURL(fileURL);
+    }
+}
+

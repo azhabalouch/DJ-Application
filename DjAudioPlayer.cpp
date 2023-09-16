@@ -1,6 +1,7 @@
 #include "DjAudioPlayer.h"
 
-DjAudioPlayer::DjAudioPlayer() {
+DjAudioPlayer::DjAudioPlayer()
+{
     formatManager.registerBasicFormats();
 
     // Initialize the reverb with no effect

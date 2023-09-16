@@ -1,22 +1,28 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "DJAudioPlayer.h"
+#include "DjAudioPlayer.h"
 #include "SpeedSliderTheme.h"
 #include "PitchSliderTheme.h"
 #include "VolumeSliderTheme.h"
 #include "PitchToggleOffTheme.h"
 #include "PitchToggleOnTheme.h"
 #include "ButtonTheme.h"
+#include "WaveformDisplay.h"
 
 using namespace juce;
 
 class DeckGUI : public Component,
                 public Button::Listener,
-                public Slider::Listener
+                public Slider::Listener,
+                public FileDragAndDropTarget
+
 {
     public:
-        DeckGUI(DjAudioPlayer* _djAudioPlayer);
+        DeckGUI(DjAudioPlayer* djAudioPlayer,
+                AudioFormatManager& formatManagerToUse,
+                AudioThumbnailCache& cacheToUse);
+
         ~DeckGUI() override;
 
         void paint (Graphics&) override;
@@ -27,9 +33,12 @@ class DeckGUI : public Component,
 
         void togglePitch();
 
+        bool isInterestedInFileDrag(const StringArray& files) override;
+        void filesDropped(const StringArray& files, int x, int y) override;
 
     private:
         DjAudioPlayer* djAudioPlayer;
+        WaveformDisplay waveformDisplay;
 
         SpeedSliderTheme speedSliderTheme;
         PitchSliderTheme pitchSliderTheme;
@@ -50,6 +59,7 @@ class DeckGUI : public Component,
         Slider pitchSlider;
         Slider speedSlider;
         Slider reverbSlider;
+        Slider positionSlider; // Temp
 
         FileChooser fChooser{ "Select a file..." };
 
