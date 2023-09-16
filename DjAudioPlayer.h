@@ -1,13 +1,13 @@
 #pragma once
-#include <JuceHeader.h>
+#include "../JuceLibraryCode/JuceHeader.h"
 #include "ea_soundtouch/ea_soundtouch.h"
 
-using namespace juce;  // Add this line to simplify namespace usage
+using namespace juce;
 
 class DjAudioPlayer : public AudioSource {
 public:
-    DjAudioPlayer();
-    ~DjAudioPlayer();
+    DjAudioPlayer(AudioFormatManager& _formatManager); // Constructor taking an AudioFormatManager reference
+    ~DjAudioPlayer(); // Destructor
 
     // Load audio from a URL
     void loadURL(URL audioURL);
@@ -21,6 +21,7 @@ public:
     // Set the playback position in seconds
     void setPosition(double posInSecs);
     void setRelativePosition(double pos);
+    double getPositionRelative();
 
     // Set the gain (volume) between 0 and 1
     void setGain(float gain);
@@ -30,7 +31,6 @@ public:
 
     // Set the pitch of the audio.
     void setPitch(double pitchShiftAmount);
-
     void setReverbRoomSize(float roomSize);
     void setReverbToNoEffect();
 
@@ -40,15 +40,11 @@ public:
     void releaseResources() override;
 
 private:
-    soundtouch::SoundTouch soundTouch;
-
-    Reverb reverb;
-
-    bool bypassSoundTouch = false;
-
-
-    AudioFormatManager formatManager;
-    std::unique_ptr<AudioFormatReaderSource> readerSource;
-    AudioTransportSource transportSource;
-    ResamplingAudioSource resampleSource{ &transportSource, false, 2 };
+    soundtouch::SoundTouch soundTouch; // SoundTouch processor for pitch shifting
+    Reverb reverb; // Reverb processor for adding reverb effect
+    bool bypassSoundTouch = false; // Flag to bypass SoundTouch processing
+    AudioFormatManager& formatManager; // Reference to an AudioFormatManager
+    std::unique_ptr<AudioFormatReaderSource> readerSource; // Pointer to an audio format reader source
+    AudioTransportSource transportSource; // Audio transport source for playback control
+    ResamplingAudioSource resampleSource{ &transportSource, false, 2 }; // Resampling audio source for playback
 };
