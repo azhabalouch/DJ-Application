@@ -25,8 +25,9 @@ public:
 
     void drawButtonText(Graphics& g, TextButton& button, bool isMouseOverButton, bool isButtonDown) override
     {
-        const Colour textColor = Colours::white; // Set the text color
-        g.setColour(textColor);
+        Colour lightGold(241, 229, 172);
+        
+        g.setColour(lightGold);
 
         g.setFont(Font("Metroscript", 40.0f, Font::bold)); // Set the Metroscript font and size
 
