@@ -28,7 +28,7 @@ public:
         const Colour textColor = Colours::white; // Set the text color
         g.setColour(textColor);
 
-        g.setFont(Font("Metroscript", 20.0f, Font::bold)); // Set the Metroscript font and size
+        g.setFont(Font("Metroscript", 40.0f, Font::bold)); // Set the Metroscript font and size
 
         g.drawText(button.getButtonText(), button.getLocalBounds(), Justification::centred);
     }
