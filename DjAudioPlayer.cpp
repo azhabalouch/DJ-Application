@@ -2,6 +2,14 @@
 
 DjAudioPlayer::DjAudioPlayer() {
     formatManager.registerBasicFormats();
+
+    // Initialize the reverb with no effect
+    Reverb::Parameters parameters;
+
+    parameters.wetLevel = 0.0;
+    parameters.dryLevel = 1.0;
+
+    reverb.setParameters(parameters);
 }
 
 DjAudioPlayer::~DjAudioPlayer() {
@@ -37,6 +45,11 @@ void DjAudioPlayer::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill
             bufferToFill.buffer->clear(numSamples, bufferToFill.numSamples - numSamples);
         }
     }
+
+    // Process the audio buffer with the reverb
+    auto* leftChannel = bufferToFill.buffer->getWritePointer(0);
+    auto* rightChannel = bufferToFill.buffer->getWritePointer(1);
+    reverb.processStereo(leftChannel, rightChannel, bufferToFill.buffer->getNumSamples());
         
 }
 
@@ -92,4 +105,24 @@ void DjAudioPlayer::play() {
 
 void DjAudioPlayer::stop() {
     transportSource.stop();
+}
+
+void DjAudioPlayer::setReverbRoomSize(float roomSize)
+{
+    auto parameters = reverb.getParameters();
+    parameters.damping = 0.5;
+    parameters.wetLevel = 0.33;
+    parameters.dryLevel = 0.4;
+    parameters.width = 1.0;
+    parameters.freezeMode = false;
+    parameters.roomSize = roomSize;
+    reverb.setParameters(parameters);
+}
+
+void DjAudioPlayer::setReverbToNoEffect()
+{
+    auto parameters = reverb.getParameters();
+    parameters.wetLevel = 0.0;
+    parameters.dryLevel = 1.0;
+    reverb.setParameters(parameters);
 }

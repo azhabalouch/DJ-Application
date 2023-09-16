@@ -28,7 +28,11 @@ public:
     // Set the playback speed ratio (1.0 is normal speed)
     void setSpeed(double ratio);
 
+    // Set the pitch of the audio.
     void setPitch(double pitchShiftAmount);
+
+    void setReverbRoomSize(float roomSize);
+    void setReverbToNoEffect();
 
     // Implementations for the AudioSource interface
     void prepareToPlay(int samplesPerBlockExpected, double sampleRate) override;
@@ -38,7 +42,10 @@ public:
 private:
     soundtouch::SoundTouch soundTouch;
 
+    Reverb reverb;
+
     bool bypassSoundTouch = false;
+
 
     AudioFormatManager formatManager;
     std::unique_ptr<AudioFormatReaderSource> readerSource;

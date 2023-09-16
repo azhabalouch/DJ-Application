@@ -2,17 +2,19 @@
 #pragma warning(disable: 4100) // Disable warning C4100 _ Annoying warning for not
                                // using an argument which is used later. So I disabled it
 
-class CustomLookAndFeel2 : public LookAndFeel_V4
+#include "../JuceLibraryCode/JuceHeader.h"
+
+class SpeedSliderTheme : public LookAndFeel_V4
 {
 public:
-    CustomLookAndFeel2()
+    SpeedSliderTheme()
     {
         // Load your image here
-        knobImage = ImageCache::getFromMemory(BinaryData::VolumeDial_png, BinaryData::VolumeDial_pngSize);
-
+        knobImage = ImageCache::getFromMemory(BinaryData::SpeedDial_png, BinaryData::SpeedDial_pngSize);
+        
         //Custom color
         Colour gold(255, 215, 0);
-
+        
         // Font color
         setColour(Slider::textBoxTextColourId, gold); // Set the text color
         setColour(Slider::textBoxOutlineColourId, gold); // Set the outline 
@@ -40,9 +42,9 @@ public:
             const double angle = MathConstants<float>::twoPi * sliderPos;
 
             // Calculate the length and position of the rotating rectangle line
-            const double lineLength = height / 2 - 20;
-            const double lineX = centerX + lineLength * std::sin(angle);
-            const double lineY = centerY - lineLength * std::cos(angle);
+            const double lineLength = height / 2 - 5;
+            const double lineX = centerX - lineLength * std::sin(angle);
+            const double lineY = centerY + lineLength * std::cos(angle);
 
             //Custom color
             Colour gold(255, 215, 0);

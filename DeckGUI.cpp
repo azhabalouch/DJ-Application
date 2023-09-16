@@ -1,6 +1,7 @@
 #include <JuceHeader.h>
 #include "DeckGUI.h"
 
+
 DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer }
 {
     // Load your image
@@ -27,22 +28,17 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer 
     backgroundImageComponent.setBounds(getLocalBounds());
     backgroundImageComponent.setImagePlacement(RectanglePlacement::stretchToFit);
     addAndMakeVisible(backgroundImageComponent);
-
-
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
-    addAndMakeVisible(playButton);
-    addAndMakeVisible(stopButton);
-    addAndMakeVisible(loadButton);
     
     //On or Off
     addAndMakeVisible(pitchToggleButton);
+    pitchToggleButton.setLookAndFeel(&pToggleOffTheme);
     pitchToggleButton.onClick = [this] { togglePitch(); };
+
 
     //Pitch Slider
     addAndMakeVisible(pitchSlider);
     pitchSlider.setEnabled(false); // disable by default
-    pitchSlider.setLookAndFeel(&customLookAndFeel2);
+    pitchSlider.setLookAndFeel(&pitchSliderTheme);
     pitchSlider.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     pitchSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
     pitchSlider.setNumDecimalPlacesToDisplay(1);
@@ -53,7 +49,7 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer 
     //Volume Slider
     addAndMakeVisible(volumeSlider);
     volumeSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
-    volumeSlider.setLookAndFeel(&customLookAndFeel3);
+    volumeSlider.setLookAndFeel(&volumeSliderTheme);
     volumeSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
     volumeSlider.setNumDecimalPlacesToDisplay(1);
     volumeSlider.setTextBoxIsEditable(true);
@@ -62,7 +58,7 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer 
 
     //Speed Slider
     addAndMakeVisible(speedSlider);
-    speedSlider.setLookAndFeel(&customLookAndFeel);
+    speedSlider.setLookAndFeel(&speedSliderTheme);
     speedSlider.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     speedSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
     speedSlider.setNumDecimalPlacesToDisplay(0);
@@ -70,8 +66,26 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer) : djAudioPlayer{ _djAudioPlayer 
     speedSlider.setRange(0.0, 10.0);
     speedSlider.addListener(this);
 
+    //Reverb Slider
+    addAndMakeVisible(reverbSlider);
+    reverbSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
+    reverbSlider.setLookAndFeel(&volumeSliderTheme); //Reusing the Volume Slider Theme as it should be same to
+                                                     //achieve UI Design.
+    reverbSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 30, 20);
+    reverbSlider.setNumDecimalPlacesToDisplay(1);
+    reverbSlider.setTextBoxIsEditable(true);
+    reverbSlider.setRange(0.0, 1.0, 0.01);
+    reverbSlider.setValue(0.0);  // Initial value
+    reverbSlider.addListener(this);
+
+
+    addAndMakeVisible(playButton);
     playButton.addListener(this);
+
+    addAndMakeVisible(stopButton);
     stopButton.addListener(this);
+
+    addAndMakeVisible(loadButton);
     loadButton.addListener(this);
 }
 
@@ -108,9 +122,12 @@ void DeckGUI::resized()
     speedSlider.setBounds(getWidth() / 2, rowH * 1, 110, 130);
 
     pitchSlider.setBounds(getWidth() / 2, rowH * 2, 110, 130);
-    pitchToggleButton.setBounds(getWidth()/2 + 100, (rowH * 2) + 50, 150, 50);
+
+    pitchToggleButton.setBounds(getWidth()/2 + 100, (rowH * 2) + 50, 55, 30);
 
     volumeSlider.setBounds(getWidth() / 2 - 100, rowH * 1, 40, (rowH + 2) * 2);
+
+    reverbSlider.setBounds(50, rowH * 1, 40, (rowH + 2) * 2);
 
     playButton.setBounds(centerW, (rowH * 3) + paddingH, buttonW, buttonH);
     stopButton.setBounds(centerW, (rowH * 4) + paddingH, buttonW, buttonH);
@@ -164,6 +181,16 @@ void DeckGUI::sliderValueChanged(Slider* slider)
             djAudioPlayer->setPitch(1.0f);
         }
     }
+    if (slider == &reverbSlider)
+    {
+        if (slider->getValue() == 0.0) {
+            djAudioPlayer->setReverbToNoEffect();
+        }
+        else {
+            djAudioPlayer->setReverbRoomSize(static_cast<float>(slider->getValue()));
+        }
+        
+    }
     /*if (slider == &positionSlider)
     {
         djAudioPlayer->setRelativePosition(slider->getValue());
@@ -175,11 +202,13 @@ void DeckGUI::togglePitch() {
     {
         // Disable the pitch slider
         pitchSlider.setEnabled(false);
+        pitchToggleButton.setLookAndFeel(&pToggleOffTheme);
     }
     else
     {
         // Enable the pitch slider
         pitchSlider.setEnabled(true);
+        pitchToggleButton.setLookAndFeel(&pToggleOnTheme);
     }
 
     sliderValueChanged(&pitchSlider);

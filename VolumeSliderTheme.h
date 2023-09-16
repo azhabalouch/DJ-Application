@@ -1,9 +1,11 @@
 #pragma once
 
-class CustomLookAndFeel3 : public LookAndFeel_V4
+#include "../JuceLibraryCode/JuceHeader.h"
+
+class VolumeSliderTheme : public LookAndFeel_V4
 {
 public:
-    CustomLookAndFeel3()
+    VolumeSliderTheme()
     {
         // Load your image here
         BarImage = ImageCache::getFromMemory(BinaryData::VolumeBar_png, BinaryData::VolumeBar_pngSize);
