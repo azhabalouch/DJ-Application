@@ -32,9 +32,13 @@ To explore and interact with the DJ Application, follow these steps:
 
 2. Extract and Copy the Juce Folder in your windows User location example. C:\Users\YourName\ -< Juce folder here
 
-3. Then create a Blank Audio Application using Projucer.
+3. Create a blank audio app using projucer.
 
-4. Then copy all of these source files in it or use clone method.
+4. Then copy all of these source files in to the source folder or use clone method.
+
+5. Replace The default project application with DjApplication inside folder.
+
+6. Verify the files and run it.
 
 **Clone the Repository:** Begin by cloning this repository to your local machine:
 
