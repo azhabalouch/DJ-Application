@@ -62,6 +62,12 @@ void DjAudioPlayer::loadURL(URL audioURL) {
         std::unique_ptr<AudioFormatReaderSource> newSource(new AudioFormatReaderSource(reader, true));
         transportSource.setSource(newSource.get(), 0, nullptr, reader->sampleRate); // Set the audio source for playback
         readerSource.reset(newSource.release()); // Release the ownership of the new audio source
+
+        if (trackLoadedCallback)
+        {
+            String trackName = File(audioURL.toString(true)).getFileNameWithoutExtension();
+            trackLoadedCallback(trackName);
+        }
     }
 }
 

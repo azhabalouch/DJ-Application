@@ -9,6 +9,13 @@
 
 using namespace juce;
 
+struct TrackInfo
+{
+    std::string title;
+    std::string length; // Store the track length as a string
+};
+
+
 class PlaylistComponent  : public Component,
                            public TableListBoxModel,
                            public Button::Listener,
@@ -52,6 +59,8 @@ public:
     void textEditorTextChanged(TextEditor& editor);
 
     bool containsIgnoreCase(const std::string& str, const std::string& searchQuery);
+
+    void onTrackLoaded(const String& trackName);
 
 private:
     ImageComponent backgroundImageComponent; // Component for displaying a background image

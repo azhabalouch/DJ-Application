@@ -25,6 +25,15 @@ MainComponent::MainComponent() // Constructor for the MainComponent class
     addAndMakeVisible(playlistComponent);
 
     formatManager.registerBasicFormats(); // Register basic audio formats
+
+    // Connect callbacks between objects
+    player1.trackLoadedCallback = [this](const String& trackName) {
+        playlistComponent.onTrackLoaded(trackName);
+        };
+
+    player2.trackLoadedCallback = [this](const String& trackName) {
+        playlistComponent.onTrackLoaded(trackName);
+        };
 }
 
 MainComponent::~MainComponent() // Destructor for the MainComponent class

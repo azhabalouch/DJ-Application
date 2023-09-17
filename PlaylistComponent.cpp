@@ -31,8 +31,7 @@ PlaylistComponent::PlaylistComponent()
     tableComponent.setVisible(false);
 
     tableComponent.getHeader().addColumn("Track title", 1, 265);
-    tableComponent.getHeader().addColumn("Length", 2, 70);
-    tableComponent.getHeader().addColumn("Delete", 3, 40);
+    tableComponent.getHeader().addColumn("Delete", 2, 40);
 
     trackTitles.push_back("Track 1");
     trackTitles.push_back("Track 2");
@@ -116,13 +115,14 @@ void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int 
         }
     }
 
-    // Draw the track title
     g.drawText(trackTitle, 2, 0, width - 4, height, Justification::centredLeft, true);
+
 }
+
 
 Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component* existingComponentToUpdate)
 {
-    if (columnId == 3)
+    if (columnId == 2)
     {
         if (existingComponentToUpdate == nullptr)
         {
@@ -228,4 +228,10 @@ bool PlaylistComponent::containsIgnoreCase(const std::string& str, const std::st
     );
 
     return (it != strEnd);
+}
+
+void PlaylistComponent::onTrackLoaded(const String& trackName)
+{
+    trackTitles.push_back(trackName.toStdString());
+    tableComponent.updateContent();
 }

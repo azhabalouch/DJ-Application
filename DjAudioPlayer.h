@@ -39,6 +39,8 @@ public:
     void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
 
+    std::function<void(const String&)> trackLoadedCallback;
+
 private:
     soundtouch::SoundTouch soundTouch; // SoundTouch processor for pitch shifting
     Reverb reverb; // Reverb processor for adding reverb effect
