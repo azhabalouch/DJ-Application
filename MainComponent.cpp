@@ -22,6 +22,8 @@ MainComponent::MainComponent() // Constructor for the MainComponent class
     addAndMakeVisible(deck1);
     addAndMakeVisible(deck2);
 
+    addAndMakeVisible(playlistComponent);
+
     formatManager.registerBasicFormats(); // Register basic audio formats
 }
 
@@ -52,9 +54,13 @@ void MainComponent::releaseResources()
 
 void MainComponent::resized()
 {
-    // Set the bounds of deck1 to occupy the left half of the component
-    deck1.setBounds(0, 0, getWidth() / 2, getHeight());
+    // Set the bounds of deck1 to occupy the left third of the component
+    deck1.setBounds(0, 0, getWidth() / 3, getHeight());
 
-    // Set the bounds of deck2 to occupy the right half of the component
-    deck2.setBounds(getWidth() / 2, 0, getWidth() / 2, getHeight());
+    // Set the bounds of playlistComponent to occupy the middle third of the component
+    playlistComponent.setBounds(getWidth() / 3, 0, getWidth() / 3, getHeight());
+
+    // Set the bounds of deck2 to occupy the right third of the component
+    deck2.setBounds((getWidth() / 3) * 2, 0, getWidth() / 3, getHeight());
+
 }

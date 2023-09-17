@@ -2,18 +2,12 @@
 #include "WaveformDisplay.h"
 
 WaveformDisplay::WaveformDisplay(AudioFormatManager& formatManagerToUse,
-    AudioThumbnailCache& cacheToUse)
+    AudioThumbnailCache& cacheToUse) // Constructor for the WaveformDisplay class, with parameters for format manager and cache
     :
-    audioThumbnail(1000, formatManagerToUse, cacheToUse),
-    fileLoaded(false),
-    position(0)
+    audioThumbnail(1000, formatManagerToUse, cacheToUse), // Initialize the audioThumbnail with a maximum size of 1000 pixels, using the provided format manager and cache
+    fileLoaded(false), // Initialize the fileLoaded flag as false
+    position(0) // Initialize the position as 0
 {
-    // Constructor for the WaveformDisplay class, with parameters for format manager and cache
-    // Initialize the audioThumbnail with a maximum size of 1000 pixels, using the provided format manager and cache
-    // Initialize the fileLoaded flag as false
-    // Initialize the position as 0
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
     audioThumbnail.addChangeListener(this); // Add this component as a change listener to the audioThumbnail
 }
 

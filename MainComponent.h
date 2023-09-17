@@ -3,6 +3,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DjAudioPlayer.h"
 #include "DeckGUI.h"
+#include "PlaylistComponent.h"
 
 using namespace juce; // Use the juce namespace for convenience
 
@@ -20,6 +21,8 @@ public:
     void resized() override; // Override the resized() function
 
 private:
+    PlaylistComponent playlistComponent;
+
     AudioFormatManager formatManager; // Manage audio formats
     AudioThumbnailCache thumbCache{ 1000 }; // Cache for audio thumbnails
 

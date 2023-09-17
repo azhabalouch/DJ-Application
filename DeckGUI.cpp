@@ -148,31 +148,31 @@ void DeckGUI::resized()
 
     // Define various layout parameters for GUI components
     int rowH = getHeight() / 8; // Calculate the height of a row
-    int buttonH = 50; // Set the height of buttons
-    int buttonW = 100; // Set the width of buttons
+    int buttonH = 40; // Set the height of buttons
+    int buttonW = 80; // Set the width of buttons
     int buttonX = getWidth() / 2 - buttonW / 2; // Calculate the horizontal position for buttons
     int buttonY = rowH * 6; // Calculate the vertical position for buttons
     int paddingH = 50; // Vertical padding value
-    int paddingW = 70; // Horizontal padding value
+    int paddingW = 50; // Horizontal padding value
     int BarSliderH = (rowH * 2) + 10; // Calculate the height of Bar slider
     int BarSliderW = 32; // Width of Bar slider
-    int SliderX = getWidth() / 2 + 30; // Calculate the horizontal position for sliders
+    int SliderX = getWidth() / 2; // Calculate the horizontal position for sliders
     int SliderY = rowH * 3; // Calculate the vertical position for sliders
     int rotateSlideH = 130; // Height of rotary sliders
     int rotateSlideW = 110; // Width of rotary sliders
-    int wavePadding = 35; // Padding for the waveform display
-    int pSliderH = 30; // Height of a pitch slider
+    int wavePadding = 20; // Padding for the waveform display
+    int pSliderH = 30; // Padding height of a pitch slider
     int tButtonH = 30; // Height of a toggle button
     int tButtonW = 55; // Width of a toggle button
 
     // Set the bounds for various GUI components
-    waveformDisplay.setBounds(wavePadding, wavePadding, getWidth() - (wavePadding + 10), (rowH * 2) - wavePadding); // Set bounds for the waveform display
-    positionSlider.setBounds(wavePadding, rowH * 2 + 15, getWidth() - wavePadding, pSliderH); // Set bounds for the position slider
+    waveformDisplay.setBounds(wavePadding - 5, wavePadding, getWidth() - (wavePadding + 10), (rowH * 2) - wavePadding); // Set bounds for the waveform display
+    positionSlider.setBounds(wavePadding - 5, rowH * 2 + 15, getWidth() - (wavePadding + 2), pSliderH); // Set bounds for the position slider
     speedSlider.setBounds(SliderX, SliderY, rotateSlideW, rotateSlideH); // Set bounds for the speed slider
     pitchSlider.setBounds(SliderX, SliderY + 125, rotateSlideW, rotateSlideH); // Set bounds for the pitch slider
-    pitchToggleButton.setBounds(SliderX + 125, SliderY + 175, tButtonW, tButtonH); // Set bounds for the pitch toggle button
-    volumeSlider.setBounds(SliderX - 100, SliderY, BarSliderW, BarSliderH); // Set bounds for the volume slider
-    reverbSlider.setBounds(SliderX - 200, SliderY, BarSliderW, BarSliderH); // Set bounds for the reverb slider
+    pitchToggleButton.setBounds(SliderX + 100, SliderY + 175, tButtonW, tButtonH); // Set bounds for the pitch toggle button
+    volumeSlider.setBounds(SliderX - 75, SliderY, BarSliderW, BarSliderH); // Set bounds for the volume slider
+    reverbSlider.setBounds(SliderX - 125, SliderY, BarSliderW, BarSliderH); // Set bounds for the reverb slider
     playButton.setBounds(buttonX - 2 * paddingW, buttonY + paddingH, buttonW, buttonH); // Set bounds for the play button
     stopButton.setBounds(buttonX + 2 * paddingW, buttonY + paddingH, buttonW, buttonH); // Set bounds for the stop button
     loadButton.setBounds(buttonX, buttonY + paddingH, buttonW, buttonH); // Set bounds for the load button
@@ -263,7 +263,12 @@ void DeckGUI::togglePitch() {
 
 bool DeckGUI::isInterestedInFileDrag(const StringArray& files)
 {
-    return true; // Indicate that the GUI is interested in file drag events
+    for (const auto& file : files)
+    {
+        if (file.containsIgnoreCase(".mp3") || file.containsIgnoreCase(".wav"))
+            return true;
+    }
+    return false;
 }
 
 void DeckGUI::filesDropped(const StringArray& files, int x, int y)
