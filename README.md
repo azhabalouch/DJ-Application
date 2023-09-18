@@ -1,3 +1,5 @@
+![Design and Demo/Actual Application.PNG](https://github.com/aazhaa/DJ-Application/blob/main/Design%20and%20Demo/Actual%20Application.PNG)
+
 # DJ Application - Object Oriented Programming Final Project
 
 Welcome to my final project source files, the "DJ Application," developed as part of the Object-Oriented Programming Language course at Goldsmith University of London! Using Juce Library.
@@ -18,7 +20,7 @@ Here's what you'll find in this repository:
 
 1. **Source Code:** The heart of the DJ Application lies in its source code. I've structured the codebase using object-oriented design principles to maintain modularity and extensibility.
 
-2. **Documentation:** To facilitate your understanding of the project, I've provided comprehensive documentation. This documentation covers project requirements, design decisions, and instructions for building and running the DJ Application.
+2. **Project Overview:** I have provided a comprehensive overview of the project to facilitate your understanding. This overview covers all the key aspects of the project, including its requirements, design decisions, and instructions for building and running the DJ Application.
 
 3. **Demo and Screenshots:** You can get a visual insight into the DJ Application's features through screenshots and, if available, a demonstration video.
 
