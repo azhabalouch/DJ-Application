@@ -66,9 +66,7 @@ void DjAudioPlayer::loadURL(URL audioURL) {
         if (trackLoadedCallback)
         {
             String _trackTitles = File(audioURL.toString(true)).getFileNameWithoutExtension();
-            DBG("Stored File: " + _trackTitles);
             String _storedFiles = audioURL.getLocalFile().getFullPathName();
-            DBG("Stored File: " + _storedFiles);
             trackLoadedCallback(_trackTitles, _storedFiles);
         }
     }
@@ -115,6 +113,11 @@ void DjAudioPlayer::play() {
 
 void DjAudioPlayer::stop() {
     transportSource.stop(); // Stop audio playback
+}
+
+void DjAudioPlayer::flush() {
+    transportSource.setSource(nullptr, 0, nullptr, 0);
+    readerSource.reset();
 }
 
 void DjAudioPlayer::setReverbRoomSize(float roomSize)

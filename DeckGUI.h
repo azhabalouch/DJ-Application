@@ -40,6 +40,10 @@ public:
 
     void timerCallback() override; // Handle timer callback events
 
+    void updateWaveform(URL audioURL);
+
+    void _clearWaveform();
+
 private:
     DjAudioPlayer* djAudioPlayer; // Pointer to the DjAudioPlayer
     WaveformDisplay waveformDisplay; // An instance of the custom WaveformDisplay class
@@ -57,6 +61,7 @@ private:
     TextButton playButton{ "Play" }; // Play button with a label
     TextButton stopButton{ "Stop" }; // Stop button with a label
     TextButton loadButton{ "Load" }; // Load button with a label
+    TextButton resetButton{ "Reset" }; // Reset button with a label
 
     TextButton pitchToggleButton{}; // A text button for toggling pitch adjustment
 

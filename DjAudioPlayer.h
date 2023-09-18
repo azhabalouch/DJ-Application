@@ -39,6 +39,8 @@ public:
     void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
 
+    void flush();
+
     std::function<void(const String&, const String&)> trackLoadedCallback;
 
 private:

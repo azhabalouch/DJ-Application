@@ -3,6 +3,7 @@
 
 PlaylistComponent::PlaylistComponent(AudioFormatManager& _formatManager)
                                     : formatManager(_formatManager)
+                                        
 {
     /************************************************************
     *************  Setting Background image  ********************
@@ -208,19 +209,24 @@ void PlaylistComponent::buttonClicked(Button* button)
             if (button->getButtonText() == "Add L")
             {
                 player1->loadURL(audioURL);
+
+                deck1->updateWaveform(audioURL);
             }
             else if (button->getButtonText() == "Add R")
             {
                 player2->loadURL(audioURL);
+
+                deck2->updateWaveform(audioURL);
             }
         }
 
         // Check if the button label is "X"
         if (button->getButtonText() == "X")
         {
-            if (id >= 0 && id < static_cast<int>(trackTitles.size()))
+            if (id >= 0 && id < static_cast<int>(trackTitles.size()) && id < static_cast<int>(storedFiles.size()))
             {
                 trackTitles.erase(trackTitles.begin() + id);
+                storedFiles.erase(storedFiles.begin() + id);
                 tableComponent.updateContent();
             }
         }
@@ -248,8 +254,6 @@ void PlaylistComponent::filesDropped(const StringArray& files, int x, int y)
             String trackName = file.getFileNameWithoutExtension();
             trackTitles.push_back(trackName.toStdString());
             storedFiles.push_back(file.getFullPathName().toStdString());
-
-            DBG("Stored File in filesDropped: " + file.getFullPathName().toStdString());
         }
     }
 
@@ -274,13 +278,13 @@ void PlaylistComponent::textEditorTextChanged(TextEditor& editor)
     tableComponent.updateContent();
 }
 
-bool PlaylistComponent::containsIgnoreCase(const std::string& str, const std::string& searchQuery)
+bool PlaylistComponent::containsIgnoreCase(const std::string& str, const std::string& _searchQuery)
 {
     // Convert the strings to iterators
     auto strBegin = str.begin();
     auto strEnd = str.end();
-    auto searchBegin = searchQuery.begin();
-    auto searchEnd = searchQuery.end();
+    auto searchBegin = _searchQuery.begin();
+    auto searchEnd = _searchQuery.end();
 
     // Use std::search with the iterators
     auto it = std::search(

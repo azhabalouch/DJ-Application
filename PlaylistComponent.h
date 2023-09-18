@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cctype>
 #include "DjAudioPlayer.h"
+#include "DeckGUI.h"
 #include <vector>
 #include "ButtonTheme.h" // Include the custom ButtonTheme header
 
@@ -67,6 +68,9 @@ public:
     void setPlayer1(DjAudioPlayer* player) { player1 = player; }
     void setPlayer2(DjAudioPlayer* player) { player2 = player; }
 
+    // Add methods to set the DjAudioPlayer instances
+    void setDeck1(DeckGUI* player) { deck1 = player; }
+    void setDeck2(DeckGUI* player) { deck2 = player; }
 private:
     AudioFormatManager& formatManager;
     std::unique_ptr<AudioFormatReaderSource> readerSource;
@@ -77,6 +81,12 @@ private:
     // Add pointers to the DjAudioPlayer instances
     DjAudioPlayer* player1 = nullptr;
     DjAudioPlayer* player2 = nullptr;
+
+
+    // Add pointers to the DjAudioPlayer instances
+    DeckGUI* deck1 = nullptr;
+    DeckGUI* deck2 = nullptr;
+
 
     DjAudioPlayer* djAudioPlayer;
 

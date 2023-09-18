@@ -122,6 +122,10 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer,
     addAndMakeVisible(loadButton); // Add the loadButton to the GUI
     loadButton.setLookAndFeel(&buttonTheme); // Set the look and feel for the load button
     loadButton.addListener(this); // Add the DeckGUI as a listener for button events
+
+    addAndMakeVisible(resetButton); // Add the loadButton to the GUI
+    resetButton.setLookAndFeel(&buttonTheme); // Set the look and feel for the load button
+    resetButton.addListener(this); // Add the DeckGUI as a listener for button events
 }
 
 // Destructor for the DeckGUI class
@@ -173,9 +177,10 @@ void DeckGUI::resized()
     pitchToggleButton.setBounds(SliderX + 100, SliderY + 175, tButtonW, tButtonH); // Set bounds for the pitch toggle button
     volumeSlider.setBounds(SliderX - 75, SliderY, BarSliderW, BarSliderH); // Set bounds for the volume slider
     reverbSlider.setBounds(SliderX - 125, SliderY, BarSliderW, BarSliderH); // Set bounds for the reverb slider
-    playButton.setBounds(buttonX - 2 * paddingW, buttonY + paddingH, buttonW, buttonH); // Set bounds for the play button
-    stopButton.setBounds(buttonX + 2 * paddingW, buttonY + paddingH, buttonW, buttonH); // Set bounds for the stop button
-    loadButton.setBounds(buttonX, buttonY + paddingH, buttonW, buttonH); // Set bounds for the load button
+    playButton.setBounds(buttonX - buttonW, buttonY, buttonW, buttonH); // Set bounds for the play button
+    stopButton.setBounds(buttonX + paddingW, buttonY, buttonW, buttonH); // Set bounds for the stop button
+    loadButton.setBounds(buttonX - buttonW, buttonY + 2*paddingH, buttonW, buttonH); // Set bounds for the load button
+    resetButton.setBounds(buttonX + paddingW, buttonY + 2*paddingH, buttonW, buttonH); // Set bounds for the load button
 }
 
 void DeckGUI::buttonClicked(Button* button)
@@ -201,8 +206,13 @@ void DeckGUI::buttonClicked(Button* button)
             {
                 URL audioURL = URL{ chooser.getResult() }; // Get the selected file's URL
                 djAudioPlayer->loadURL(audioURL); // Load the selected audio file in the audio player
-                waveformDisplay.loadURL(URL{ chooser.getResult() }); // Load the same audio file in the waveform display
+                updateWaveform(audioURL); // Load the same audio file in the waveform display
             });
+    }
+
+    if (button == &resetButton) // Check if the clicked button is the stop button
+    {
+        _clearWaveform(); // Stop audio playback
     }
 }
 
@@ -277,8 +287,19 @@ void DeckGUI::filesDropped(const StringArray& files, int x, int y)
     {
         URL fileURL = URL{ File{filename} }; // Create a URL from the dropped file
         djAudioPlayer->loadURL(fileURL); // Load the dropped audio file in the audio player
-        waveformDisplay.loadURL(fileURL); // Load the same audio file in the waveform display
+        updateWaveform(fileURL);
     }
+}
+
+void DeckGUI::updateWaveform(URL audioURL)
+{
+    waveformDisplay.loadURL(audioURL); // Load the same audio file in the waveform display
+}
+
+void DeckGUI::_clearWaveform()
+{
+    djAudioPlayer->flush();
+    waveformDisplay.clearWaveform();
 }
 
 void DeckGUI::timerCallback()

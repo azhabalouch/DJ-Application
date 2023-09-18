@@ -37,6 +37,8 @@ MainComponent::MainComponent() // Constructor for the MainComponent class
 
     playlistComponent.setPlayer1(&player1);
     playlistComponent.setPlayer2(&player2);
+    playlistComponent.setDeck1(&deck1);
+    playlistComponent.setDeck2(&deck2);
 }
 
 MainComponent::~MainComponent() // Destructor for the MainComponent class

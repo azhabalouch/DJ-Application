@@ -100,3 +100,18 @@ String WaveformDisplay::timeToTimecode(double timeInSeconds) {
     int seconds = timeInSeconds - (hours * 3600) - (minutes * 60); // Calculate seconds
     return String::formatted("%02d:%02d:%02d", hours, minutes, seconds); // Format and return the timecode as a string
 }
+
+void WaveformDisplay::clearWaveform()
+{
+    // Clear the audioThumbnail
+    audioThumbnail.clear();
+
+    // Reset the fileLoaded flag
+    fileLoaded = false;
+
+    // Reset the position
+    position = 0;
+
+    // Repaint the component to reflect the changes
+    repaint();
+}

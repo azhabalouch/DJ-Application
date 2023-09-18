@@ -22,6 +22,8 @@ public:
 
     String timeToTimecode(double timeInSeconds); // Method to convert time in seconds to timecode format
 
+    void clearWaveform();
+
 private:
     AudioThumbnail audioThumbnail; // Create an AudioThumbnail object for displaying audio waveforms
 
