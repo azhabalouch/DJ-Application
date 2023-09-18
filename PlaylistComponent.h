@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <cctype>
 #include "DjAudioPlayer.h"
+#include "Meter.h"
+#include "PadsTheme.h"
 #include "DeckGUI.h"
 #include <vector>
 #include "ButtonTheme.h" // Include the custom ButtonTheme header
@@ -71,6 +73,13 @@ public:
     // Add methods to set the DjAudioPlayer instances
     void setDeck1(DeckGUI* player) { deck1 = player; }
     void setDeck2(DeckGUI* player) { deck2 = player; }
+
+    void loadAndPlay(URL audioURL);
+
+    void play();
+
+    void stop() ;
+
 private:
     AudioFormatManager& formatManager;
     std::unique_ptr<AudioFormatReaderSource> readerSource;
@@ -91,6 +100,18 @@ private:
     DjAudioPlayer* djAudioPlayer;
 
     ButtonTheme buttonTheme;
+
+    Meter lookAndFeel_ImageMeter;
+    PadsTheme lookAndFeel_Pads;
+
+    TextButton headerImage;
+
+    TextButton pad1;
+    TextButton pad2;
+    TextButton pad3;
+    TextButton pad4;
+    TextButton pad5;
+    TextButton pad6;
 
     TextEditor searchField;
 

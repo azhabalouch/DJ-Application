@@ -1,9 +1,9 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "DeckGUI.h"
 
-
 #include "DeckGUI.h"
 
+/*********class DeckGUI*********/
 // Constructor for the DeckGUI class
 DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer,
     AudioFormatManager& formatManagerToUse,
@@ -11,7 +11,6 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer,
     :
     djAudioPlayer(_djAudioPlayer),  // Initialize DjAudioPlayer pointer
     waveformDisplay(formatManagerToUse, cacheToUse)  // Initialize waveformDisplay
-
 {
     startTimer(200); // Start a timer with a 200-millisecond interval
 
@@ -102,7 +101,6 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer,
     speedTitle.setColour(Label::textColourId, lightGold);
     speedTitle.setJustificationType(Justification::centred);
 
-
     // Reverb Slider
 
     addAndMakeVisible(reverbSlider); // Add the reverbSlider to the GUI
@@ -156,13 +154,16 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer,
     resetButton.addListener(this); // Add the DeckGUI as a listener for button events
 }
 
+/*********destructor ~DeckGUI*********/
 // Destructor for the DeckGUI class
 DeckGUI::~DeckGUI()
 {
     stopTimer(); // Stop the timer when the GUI component is destroyed
 }
 
-void DeckGUI::paint (juce::Graphics& g)
+/*********method paint*********/
+// Override the paint method to perform custom drawing
+void DeckGUI::paint(juce::Graphics& g)
 {
     /* This demo code just fills the component's background and
        draws some placeholder text to get you started.
@@ -174,6 +175,8 @@ void DeckGUI::paint (juce::Graphics& g)
     g.fillAll(getLookAndFeel().findColour(ResizableWindow::backgroundColourId));
 }
 
+/*********method resized*********/
+// Override the resized method to handle component layout
 void DeckGUI::resized()
 {
     backgroundImageComponent.setBounds(getLocalBounds()); // Set the background image component's bounds to fill the entire component
@@ -200,7 +203,7 @@ void DeckGUI::resized()
     // Set the bounds for various GUI components
     waveformDisplay.setBounds(wavePadding - 5, wavePadding, getWidth() - (wavePadding + 10), (rowH * 2) - wavePadding); // Set bounds for the waveform display
     positionSlider.setBounds(wavePadding - 5, rowH * 2 + 15, getWidth() - (wavePadding + 2), pSliderH); // Set bounds for the position slider
-    
+
     volumeTitle.setBounds(SliderX - 90, SliderY + 200, 70, 40);
     volumeSlider.setBounds(SliderX - 75, SliderY, BarSliderW, BarSliderH); // Set bounds for the volume slider
 
@@ -209,17 +212,19 @@ void DeckGUI::resized()
 
     playButton.setBounds(buttonX - buttonW + 20, buttonY + 35, buttonW, buttonH); // Set bounds for the play button
     stopButton.setBounds(buttonX + paddingW + 10, buttonY + 35, buttonW, buttonH); // Set bounds for the stop button
-    loadButton.setBounds(buttonX - buttonW + 20, buttonY + 2*paddingH, buttonW, buttonH); // Set bounds for the load button
-    resetButton.setBounds(buttonX + paddingW + 10, buttonY + 2*paddingH, buttonW, buttonH); // Set bounds for the load button
+    loadButton.setBounds(buttonX - buttonW + 20, buttonY + 2 * paddingH, buttonW, buttonH); // Set bounds for the load button
+    resetButton.setBounds(buttonX + paddingW + 10, buttonY + 2 * paddingH, buttonW, buttonH); // Set bounds for the load button
 
     speedTitle.setBounds(SliderX + 70, SliderY + 20, rotateSlideW, rotateSlideH);
     speedSlider.setBounds(SliderX, SliderY - 20, rotateSlideW, rotateSlideH); // Set bounds for the speed slider
 
-    pitchTitle.setBounds(SliderX + 70, SliderY + 165, rotateSlideW, rotateSlideH);
+    pitchTitle.setBounds(SliderX + 95, SliderY + 195, 60, 50);
     pitchSlider.setBounds(SliderX, SliderY + 125, rotateSlideW, rotateSlideH); // Set bounds for the pitch slider
     pitchToggleButton.setBounds(SliderX + 100, SliderY + 175, tButtonW, tButtonH); // Set bounds for the pitch toggle button
 }
 
+/*********method buttonClicked*********/
+// Handle button click events
 void DeckGUI::buttonClicked(Button* button)
 {
     if (button == &playButton) // Check if the clicked button is the play button
@@ -253,6 +258,8 @@ void DeckGUI::buttonClicked(Button* button)
     }
 }
 
+/*********method sliderValueChanged*********/
+// Handle slider value change events
 void DeckGUI::sliderValueChanged(Slider* slider)
 {
     if (slider == &volumeSlider) // Check if the changed slider is the volume slider
@@ -291,6 +298,8 @@ void DeckGUI::sliderValueChanged(Slider* slider)
     }
 }
 
+/*********method togglePitch*********/
+// Toggle the pitch slider's enabled state
 void DeckGUI::togglePitch() {
     if (pitchSlider.isEnabled()) // Check if the pitch slider is enabled
     {
@@ -305,7 +314,7 @@ void DeckGUI::togglePitch() {
         pitchToggleButton.setLookAndFeel(&pToggleOnTheme); // Set the look and feel for the pitch toggle button when enabled
     }
 
-    sliderValueChanged(&pitchSlider); // Trigger a slider value change event for the pitch slider
+    sliderValueChanged(&pitchSlider); // Trigger a value change event to update pitch immediately
 }
 
 bool DeckGUI::isInterestedInFileDrag(const StringArray& files)

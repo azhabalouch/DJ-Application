@@ -14,34 +14,63 @@
 
 using namespace juce; // Use the JUCE namespace
 
-class DeckGUI : public Component, // Define the DeckGUI class, which inherits from Component
+/*********class DeckGUI*********/
+// Define the DeckGUI class, which inherits from Component
+class DeckGUI : public Component,
     public Button::Listener, // Implement the Button::Listener interface
     public Slider::Listener, // Implement the Slider::Listener interface
     public FileDragAndDropTarget, // Implement the FileDragAndDropTarget interface
     public Timer   // Implement the Timer interface
 {
 public:
-    DeckGUI(DjAudioPlayer* djAudioPlayer, // Constructor for DeckGUI, taking a DjAudioPlayer pointer and other parameters
+    /*********constructor DeckGUI*********/
+    // Constructor for DeckGUI, taking a DjAudioPlayer pointer and other parameters
+    DeckGUI(DjAudioPlayer* djAudioPlayer,
         AudioFormatManager& formatManagerToUse,
         AudioThumbnailCache& cacheToUse);
 
-    ~DeckGUI() override; // Destructor for DeckGUI
+    /*********destructor ~DeckGUI*********/
+    // Destructor for DeckGUI
+    ~DeckGUI() override;
 
-    void paint(Graphics&) override; // Override the paint method to perform custom drawing
-    void resized() override; // Override the resized method to handle component layout
+    /*********method paint*********/
+    // Override the paint method to perform custom drawing
+    void paint(Graphics&) override;
 
-    void buttonClicked(Button* button) override; // Handle button click events
-    void sliderValueChanged(Slider* slider) override; // Handle slider value change events
+    /*********method resized*********/
+    // Override the resized method to handle component layout
+    void resized() override;
 
-    void togglePitch(); // Toggle the pitch slider's state
+    /*********method buttonClicked*********/
+    // Handle button click events
+    void buttonClicked(Button* button) override;
 
-    bool isInterestedInFileDrag(const StringArray& files) override; // Determine if the component is interested in file drag events
-    void filesDropped(const StringArray& files, int x, int y) override; // Handle files dropped onto the component
+    /*********method sliderValueChanged*********/
+    // Handle slider value change events
+    void sliderValueChanged(Slider* slider) override;
 
-    void timerCallback() override; // Handle timer callback events
+    /*********method togglePitch*********/
+    // Toggle the pitch slider's state
+    void togglePitch();
 
+    /*********method isInterestedInFileDrag*********/
+    // Determine if the component is interested in file drag events
+    bool isInterestedInFileDrag(const StringArray& files) override;
+
+    /*********method filesDropped*********/
+    // Handle files dropped onto the component
+    void filesDropped(const StringArray& files, int x, int y) override;
+
+    /*********method timerCallback*********/
+    // Handle timer callback events
+    void timerCallback() override;
+
+    /*********method updateWaveform*********/
+    // Update the waveform display with the given audio URL
     void updateWaveform(URL audioURL);
 
+    /*********method _clearWaveform*********/
+    // Clear the waveform display
     void _clearWaveform();
 
 private:
@@ -58,22 +87,27 @@ private:
 
     ImageComponent backgroundImageComponent; // Component for displaying a background image
 
+
     TextButton playButton{ "Play" }; // Play button with a label
     TextButton stopButton{ "Stop" }; // Stop button with a label
     TextButton loadButton{ "Load" }; // Load button with a label
     TextButton resetButton{ "Reset" }; // Reset button with a label
 
-    Label speedTitle;
-    Label pitchTitle;
-    Label volumeTitle;
-    Label reverbTitle;
+    
 
+    Label volumeTitle;
+    Slider volumeSlider; // Volume slider
+
+    Label pitchTitle;
+    Slider pitchSlider; // Pitch slider
     TextButton pitchToggleButton{}; // A text button for toggling pitch adjustment
 
-    Slider volumeSlider; // Volume slider
-    Slider pitchSlider; // Pitch slider
+    Label speedTitle;
     Slider speedSlider; // Speed slider
+    
+    Label reverbTitle;
     Slider reverbSlider; // Reverb slider
+    
     Slider positionSlider; // Position slider (temporary)
 
     FileChooser fChooser{ "Select a file..." }; // File chooser dialog

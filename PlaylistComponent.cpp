@@ -26,7 +26,6 @@ PlaylistComponent::PlaylistComponent(AudioFormatManager& _formatManager)
     backgroundImageComponent.setImagePlacement(RectanglePlacement::stretchToFit);
     addAndMakeVisible(backgroundImageComponent);
 
-    /************************************************************************************************************************/
 
     addAndMakeVisible(tableComponent);
     tableComponent.setColour(TableListBox::backgroundColourId, Colour::fromRGB(40, 40, 40));
@@ -43,6 +42,31 @@ PlaylistComponent::PlaylistComponent(AudioFormatManager& _formatManager)
     searchField.setColour(TextEditor::textColourId, Colour::fromRGB(255, 215, 0)); // Gold text
     searchField.setColour(TextEditor::backgroundColourId, Colour::fromRGB(0, 0, 0)); // Gold text
     searchField.setColour(TextEditor::outlineColourId, Colour::fromRGB(255, 215, 0)); // Gold outline
+
+    /************************************************************************************************************************/
+   
+    addAndMakeVisible(headerImage);
+    headerImage.setLookAndFeel(&lookAndFeel_ImageMeter);
+
+    
+    addAndMakeVisible(pad1);
+    pad1.setLookAndFeel(&lookAndFeel_Pads);
+   
+    addAndMakeVisible(pad2);
+    pad2.setLookAndFeel(&lookAndFeel_Pads);
+    
+    addAndMakeVisible(pad3);
+    pad3.setLookAndFeel(&lookAndFeel_Pads);
+
+    addAndMakeVisible(pad4);
+    pad4.setLookAndFeel(&lookAndFeel_Pads);
+   
+    addAndMakeVisible(pad5);
+    pad5.setLookAndFeel(&lookAndFeel_Pads);
+    
+    addAndMakeVisible(pad6);
+    pad6.setLookAndFeel(&lookAndFeel_Pads);
+    /************************************************************************************************************************/
     searchField.addListener(this);
 }
 
@@ -52,6 +76,10 @@ PlaylistComponent::~PlaylistComponent()
 
 void PlaylistComponent::paint(Graphics& g)
 {
+    Image myImage = ImageCache::getFromMemory(BinaryData::Meter_png, BinaryData::Meter_pngSize);
+
+    g.drawImageAt(myImage, 400, 200);
+
     Colour lightGold(241, 229, 172);
     g.setColour(lightGold);
     g.drawRect(getLocalBounds(), 1);
@@ -64,6 +92,23 @@ void PlaylistComponent::paint(Graphics& g)
 void PlaylistComponent::resized()
 {
     backgroundImageComponent.setBounds(getLocalBounds());
+
+    int hImageHeight = 190;
+    int hImageWidth = getWidth() - 80 * 2;
+    headerImage.setBounds(80, 20, hImageWidth, hImageHeight);
+
+    int padsHW = 90;
+    int padLeftX = 80;
+    int padRightX = getWidth() / 2 - 10;
+
+    int padY = hImageHeight + 60;
+
+    pad1.setBounds(padLeftX, padY, padsHW, padsHW);
+    pad2.setBounds(padRightX, padY, padsHW, padsHW);
+    pad3.setBounds(padLeftX, padY + padsHW + 15, padsHW, padsHW);
+    pad4.setBounds(padRightX, padY + padsHW + 15, padsHW, padsHW);
+    pad5.setBounds(padLeftX, padY + 2*padsHW + 30, padsHW, padsHW);
+    pad6.setBounds(padRightX, padY + 2*padsHW + 30, padsHW, padsHW);
 
     int padding = 10;
 
@@ -172,55 +217,58 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
     return existingComponentToUpdate;
 }
 
-void PlaylistComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {}
-void PlaylistComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) {}
-void PlaylistComponent::releaseResources() {}
-
-void PlaylistComponent::cellClicked(int rowNumber, int columnId, const MouseEvent&)
-{
-    // Handle cell click event if needed
+void PlaylistComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {
+}
+void PlaylistComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) {
+}
+void PlaylistComponent::releaseResources() {
 }
 
 void PlaylistComponent::buttonClicked(Button* button)
 {
-    int id = std::stoi(button->getComponentID().toStdString());
-
-    // Check if the ID is within the range of storedFiles
-    if (id >= 0 && id < static_cast<int>(storedFiles.size()))
+    String componentID = button->getComponentID();
+    if (!componentID.isEmpty())
     {
-        String filePath = storedFiles[id];
+        int id = std::stoi(button->getComponentID().toStdString());
 
-        // Create a File object from the file path
-        File audioFile = File(filePath);
-
-        // Convert the file to a URL
-        URL audioURL = URL(audioFile);
-
-        // Load the track into the appropriate deck based on which button was clicked
-        if (button->getButtonText() == "Add L")
+        // Check if the ID is within the range of storedFiles
+        if (id >= 0 && id < static_cast<int>(storedFiles.size()))
         {
-            player1->loadURL(audioURL);
+            String filePath = storedFiles[id];
 
-            deck1->updateWaveform(audioURL);
+            // Create a File object from the file path
+            File audioFile = File(filePath);
+
+            // Convert the file to a URL
+            URL audioURL = URL(audioFile);
+
+            // Load the track into the appropriate deck based on which button was clicked
+            if (button->getButtonText() == "Add L")
+            {
+                player1->loadURL(audioURL);
+
+                deck1->updateWaveform(audioURL);
+            }
+            else if (button->getButtonText() == "Add R")
+            {
+                player2->loadURL(audioURL);
+
+                deck2->updateWaveform(audioURL);
+            }
         }
-        else if (button->getButtonText() == "Add R")
-        {
-            player2->loadURL(audioURL);
 
-            deck2->updateWaveform(audioURL);
+        // Check if the button label is "X"
+        if (button->getButtonText() == "X")
+        {
+            if (id >= 0 && id < static_cast<int>(trackTitles.size()) && id < static_cast<int>(storedFiles.size()))
+            {
+                trackTitles.erase(trackTitles.begin() + id);
+                storedFiles.erase(storedFiles.begin() + id);
+                tableComponent.updateContent();
+            }
         }
     }
-
-    // Check if the button label is "X"
-    if (button->getButtonText() == "X")
-    {
-        if (id >= 0 && id < static_cast<int>(trackTitles.size()) && id < static_cast<int>(storedFiles.size()))
-        {
-            trackTitles.erase(trackTitles.begin() + id);
-            storedFiles.erase(storedFiles.begin() + id);
-            tableComponent.updateContent();
-        }
-    }
+    
 }
 
 
@@ -250,6 +298,10 @@ void PlaylistComponent::filesDropped(const StringArray& files, int x, int y)
     tableComponent.updateContent();
 }
 
+
+void PlaylistComponent::cellClicked(int rowNumber, int columnId, const MouseEvent&)
+{
+}
 
 void PlaylistComponent::textEditorTextChanged(TextEditor& editor)
 {
