@@ -65,8 +65,11 @@ void DjAudioPlayer::loadURL(URL audioURL) {
 
         if (trackLoadedCallback)
         {
-            String trackName = File(audioURL.toString(true)).getFileNameWithoutExtension();
-            trackLoadedCallback(trackName);
+            String _trackTitles = File(audioURL.toString(true)).getFileNameWithoutExtension();
+            DBG("Stored File: " + _trackTitles);
+            String _storedFiles = audioURL.getLocalFile().getFullPathName();
+            DBG("Stored File: " + _storedFiles);
+            trackLoadedCallback(_trackTitles, _storedFiles);
         }
     }
 }

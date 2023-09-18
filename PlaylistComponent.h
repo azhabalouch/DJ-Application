@@ -9,13 +9,6 @@
 
 using namespace juce;
 
-struct TrackInfo
-{
-    std::string title;
-    std::string length; // Store the track length as a string
-};
-
-
 class PlaylistComponent  : public Component,
                            public TableListBoxModel,
                            public Button::Listener,
@@ -23,7 +16,7 @@ class PlaylistComponent  : public Component,
                            public FileDragAndDropTarget
 {
 public:
-    PlaylistComponent();
+    PlaylistComponent(AudioFormatManager& _formatManager);
     ~PlaylistComponent() override;
 
     void paint (Graphics&) override;
@@ -60,10 +53,30 @@ public:
 
     bool containsIgnoreCase(const std::string& str, const std::string& searchQuery);
 
-    void onTrackLoaded(const String& trackName);
+    //==============================================================================
+    /**Placeholder function override for Audio Source component to tell the source to prepare for playing*/
+    void prepareToPlay(int samplesPerBlockExpected, double sampleRate);
+    /**Placeholder function override for Audio Source component to fetch subsequent blocks of audio data*/
+    void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill);
+    /**Placeholder function override for Audio Source component to release anything it no longer needs*/
+    void releaseResources();
+
+    void onTrackLoaded(const String& _trackTitle, const String& _filepath);
+
+    // Add methods to set the DjAudioPlayer instances
+    void setPlayer1(DjAudioPlayer* player) { player1 = player; }
+    void setPlayer2(DjAudioPlayer* player) { player2 = player; }
 
 private:
+    AudioFormatManager& formatManager;
+    std::unique_ptr<AudioFormatReaderSource> readerSource;
+    AudioTransportSource transportSource;
+
     ImageComponent backgroundImageComponent; // Component for displaying a background image
+
+    // Add pointers to the DjAudioPlayer instances
+    DjAudioPlayer* player1 = nullptr;
+    DjAudioPlayer* player2 = nullptr;
 
     DjAudioPlayer* djAudioPlayer;
 
@@ -78,6 +91,7 @@ private:
     TableListBox tableComponent;
 
     std::vector<std::string> trackTitles;
+    std::vector<std::string> storedFiles;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PlaylistComponent)
 };

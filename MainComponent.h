@@ -21,8 +21,6 @@ public:
     void resized() override; // Override the resized() function
 
 private:
-    PlaylistComponent playlistComponent;
-
     AudioFormatManager formatManager; // Manage audio formats
     AudioThumbnailCache thumbCache{ 1000 }; // Cache for audio thumbnails
 
@@ -31,6 +29,8 @@ private:
 
     DjAudioPlayer player2{ formatManager }; // Create another DjAudioPlayer instance with formatManager
     DeckGUI deck2{ &player2, formatManager, thumbCache }; // Create another DeckGUI instance associated with player2
+
+    PlaylistComponent playlistComponent{ formatManager };
 
     MixerAudioSource mixerSource; // Create a MixerAudioSource for mixing audio
 

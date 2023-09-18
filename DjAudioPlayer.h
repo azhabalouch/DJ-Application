@@ -39,7 +39,7 @@ public:
     void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
 
-    std::function<void(const String&)> trackLoadedCallback;
+    std::function<void(const String&, const String&)> trackLoadedCallback;
 
 private:
     soundtouch::SoundTouch soundTouch; // SoundTouch processor for pitch shifting

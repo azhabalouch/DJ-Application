@@ -1,7 +1,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PlaylistComponent.h"
 
-PlaylistComponent::PlaylistComponent()
+PlaylistComponent::PlaylistComponent(AudioFormatManager& _formatManager)
+                                    : formatManager(_formatManager)
 {
     /************************************************************
     *************  Setting Background image  ********************
@@ -31,12 +32,9 @@ PlaylistComponent::PlaylistComponent()
     tableComponent.setVisible(false);
 
     tableComponent.getHeader().addColumn("Track title", 1, 265);
-    tableComponent.getHeader().addColumn("Delete", 2, 40);
-
-    trackTitles.push_back("Track 1");
-    trackTitles.push_back("Track 2");
-    trackTitles.push_back("Track 3");
-    trackTitles.push_back("Track 4");
+    tableComponent.getHeader().addColumn("Left Deck", 2, 60);
+    tableComponent.getHeader().addColumn("Right Deck", 3, 60);
+    tableComponent.getHeader().addColumn("Delete", 4, 40);
 
     addAndMakeVisible(editButton);
     editButton.setLookAndFeel(&buttonTheme);
@@ -126,6 +124,30 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
     {
         if (existingComponentToUpdate == nullptr)
         {
+            TextButton* btn = new TextButton("Add L");
+            btn->addListener(this);
+            existingComponentToUpdate = btn;
+
+            String id{ std::to_string(rowNumber) };
+            btn->setComponentID(id);
+        }
+    }
+    if (columnId == 3)
+    {
+        if (existingComponentToUpdate == nullptr)
+        {
+            TextButton* btn = new TextButton("Add R");
+            btn->addListener(this);
+            existingComponentToUpdate = btn;
+
+            String id{ std::to_string(rowNumber) };
+            btn->setComponentID(id);
+        }
+    }
+    if (columnId == 4)
+    {
+        if (existingComponentToUpdate == nullptr)
+        {
             TextButton* btn = new TextButton("X");
             btn->addListener(this);
             existingComponentToUpdate = btn;
@@ -136,6 +158,10 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
     }
     return existingComponentToUpdate;
 }
+
+void PlaylistComponent::prepareToPlay(int samplesPerBlockExpected, double sampleRate) {}
+void PlaylistComponent::getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill) {}
+void PlaylistComponent::releaseResources() {}
 
 void PlaylistComponent::cellClicked(int rowNumber, int columnId, const MouseEvent&)
 {
@@ -166,13 +192,41 @@ void PlaylistComponent::buttonClicked(Button* button)
     else
     {
         int id = std::stoi(button->getComponentID().toStdString());
-        if (id >= 0 && id < static_cast<int>(trackTitles.size()))
+
+        // Check if the ID is within the range of storedFiles
+        if (id >= 0 && id < static_cast<int>(storedFiles.size()))
         {
-            trackTitles.erase(trackTitles.begin() + id);
-            tableComponent.updateContent();
+            String filePath = storedFiles[id];
+
+            // Create a File object from the file path
+            File audioFile = File(filePath);
+
+            // Convert the file to a URL
+            URL audioURL = URL(audioFile);
+
+            // Load the track into the appropriate deck based on which button was clicked
+            if (button->getButtonText() == "Add L")
+            {
+                player1->loadURL(audioURL);
+            }
+            else if (button->getButtonText() == "Add R")
+            {
+                player2->loadURL(audioURL);
+            }
+        }
+
+        // Check if the button label is "X"
+        if (button->getButtonText() == "X")
+        {
+            if (id >= 0 && id < static_cast<int>(trackTitles.size()))
+            {
+                trackTitles.erase(trackTitles.begin() + id);
+                tableComponent.updateContent();
+            }
         }
     }
 }
+
 
 bool PlaylistComponent::isInterestedInFileDrag(const StringArray& files)
 {
@@ -188,12 +242,20 @@ void PlaylistComponent::filesDropped(const StringArray& files, int x, int y)
 {
     for (const String& filename : files)
     {
-        String trackName = File(filename).getFileNameWithoutExtension();
-        trackTitles.push_back(trackName.toStdString());
+        File file(filename);
+        if (file.hasFileExtension(".wav") || file.hasFileExtension(".mp3") || file.hasFileExtension(".flac"))
+        {
+            String trackName = file.getFileNameWithoutExtension();
+            trackTitles.push_back(trackName.toStdString());
+            storedFiles.push_back(file.getFullPathName().toStdString());
+
+            DBG("Stored File in filesDropped: " + file.getFullPathName().toStdString());
+        }
     }
 
     tableComponent.updateContent();
 }
+
 
 void PlaylistComponent::textEditorTextChanged(TextEditor& editor)
 {
@@ -230,8 +292,20 @@ bool PlaylistComponent::containsIgnoreCase(const std::string& str, const std::st
     return (it != strEnd);
 }
 
-void PlaylistComponent::onTrackLoaded(const String& trackName)
+//void PlaylistComponent::onTrackLoaded(const String& trackName)
+//{
+//    trackTitles.push_back(trackName.toStdString());
+//    tableComponent.updateContent();
+//}
+
+void PlaylistComponent::onTrackLoaded(const String& _trackTitle, const String& _storedFiles)
 {
-    trackTitles.push_back(trackName.toStdString());
-    tableComponent.updateContent();
+    // Check if the track is already in the table
+    if (std::find(trackTitles.begin(), trackTitles.end(), _trackTitle) == trackTitles.end())
+    {
+        // If the track is not in the table, add it
+        trackTitles.push_back(_trackTitle.toStdString());
+        storedFiles.push_back(_storedFiles.toStdString());
+        tableComponent.updateContent();
+    }
 }
