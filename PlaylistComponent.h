@@ -74,12 +74,6 @@ public:
     void setDeck1(DeckGUI* player) { deck1 = player; }
     void setDeck2(DeckGUI* player) { deck2 = player; }
 
-    void loadAndPlay(URL audioURL);
-
-    void play();
-
-    void stop() ;
-
 private:
     AudioFormatManager& formatManager;
     std::unique_ptr<AudioFormatReaderSource> readerSource;

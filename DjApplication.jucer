@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="cAoMe7" name="DJapplication" projectType="guiapp" useAppConfig="0"
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+  <MAINGROUP id="pnb4kN" name="DJapplication">
+    <GROUP id="{7455D2E9-C45D-27DA-4BC2-D455B534CB77}" name="Assets">
+      <FILE id="U3D3Cn" name="Pad.png" compile="0" resource="1" file="Source/Assets/Pad.png"/>
+      <FILE id="OUJloo" name="Meter.png" compile="0" resource="1" file="Source/Assets/Meter.png"/>
+      <FILE id="upcCk5" name="HorizontalBar.png" compile="0" resource="1"
+            file="Source/Assets/HorizontalBar.png"/>
+      <FILE id="ToxMQT" name="HorizontalBarKnob.png" compile="0" resource="1"
+            file="Source/Assets/HorizontalBarKnob.png"/>
+      <FILE id="hedxgU" name="ToggleOff.png" compile="0" resource="1" file="Source/Assets/ToggleOff.png"/>
+      <FILE id="Xsdwqg" name="ToggleOn.png" compile="0" resource="1" file="Source/Assets/ToggleOn.png"/>
+      <FILE id="ELKQFF" name="Background2.jpg" compile="0" resource="1" file="Source/Assets/Background2.jpg"/>
+      <FILE id="Qz7q6k" name="VolumeBar.png" compile="0" resource="1" file="Source/Assets/VolumeBar.png"/>
+      <FILE id="KmrzTb" name="VerticalKnob.png" compile="0" resource="1"
+            file="Source/Assets/VerticalKnob.png"/>
+      <FILE id="l08fUr" name="VolumeDial.png" compile="0" resource="1" file="Source/Assets/VolumeDial.png"/>
+      <FILE id="TwUSq6" name="SpeedDial.png" compile="0" resource="1" file="Source/Assets/SpeedDial.png"/>
+    </GROUP>
+    <GROUP id="{3C25538D-5F9B-2F18-FB6B-536812CE11CD}" name="Source">
+      <FILE id="FKgB1h" name="PadsTheme.h" compile="0" resource="0" file="Source/PadsTheme.h"/>
+      <FILE id="ceAgVo" name="Meter.h" compile="0" resource="0" file="Source/Meter.h"/>
+      <FILE id="hsho9G" name="PlaylistComponent.cpp" compile="1" resource="0"
+            file="Source/PlaylistComponent.cpp"/>
+      <FILE id="L73fD5" name="PlaylistComponent.h" compile="0" resource="0"
+            file="Source/PlaylistComponent.h"/>
+      <FILE id="MwgRdA" name="PositionSliderTheme.h" compile="0" resource="0"
+            file="Source/PositionSliderTheme.h"/>
+      <FILE id="LfNr85" name="WaveformDisplay.cpp" compile="1" resource="0"
+            file="Source/WaveformDisplay.cpp"/>
+      <FILE id="LCCZjF" name="WaveformDisplay.h" compile="0" resource="0"
+            file="Source/WaveformDisplay.h"/>
+      <FILE id="kVsnbc" name="ButtonTheme.h" compile="0" resource="0" file="Source/ButtonTheme.h"/>
+      <FILE id="Aan0TA" name="PitchSliderTheme.h" compile="0" resource="0"
+            file="Source/PitchSliderTheme.h"/>
+      <FILE id="s0M9EV" name="PitchToggleOffTheme.h" compile="0" resource="0"
+            file="Source/PitchToggleOffTheme.h"/>
+      <FILE id="WtMdWf" name="PitchToggleOnTheme.h" compile="0" resource="0"
+            file="Source/PitchToggleOnTheme.h"/>
+      <FILE id="PN1UUb" name="SpeedSliderTheme.h" compile="0" resource="0"
+            file="Source/SpeedSliderTheme.h"/>
+      <FILE id="FN17vV" name="VolumeSliderTheme.h" compile="0" resource="0"
+            file="Source/VolumeSliderTheme.h"/>
+      <FILE id="dsKZKI" name="DeckGUI.cpp" compile="1" resource="0" file="Source/DeckGUI.cpp"/>
+      <FILE id="jeowAZ" name="DeckGUI.h" compile="0" resource="0" file="Source/DeckGUI.h"/>
+      <FILE id="gDC52g" name="DjAudioPlayer.cpp" compile="1" resource="0"
+            file="Source/DjAudioPlayer.cpp"/>
+      <FILE id="GhCbZr" name="DjAudioPlayer.h" compile="0" resource="0" file="Source/DjAudioPlayer.h"/>
+      <FILE id="HPuR3R" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="iB4FH4" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="gp9Qsb" name="MainComponent.cpp" compile="1" resource="0"
+            file="Source/MainComponent.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <MODULES>
+    <MODULE id="ea_soundtouch" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+  <EXPORTFORMATS>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="NewProject"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="NewProject"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../JUCE/modules"/>
+        <MODULEPATH id="ea_soundtouch" path="Source"/>
+        <MODULEPATH id="juce_dsp" path="../../JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2022>
+  </EXPORTFORMATS>
+</JUCERPROJECT>
