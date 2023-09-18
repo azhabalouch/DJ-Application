@@ -63,6 +63,11 @@ private:
     TextButton loadButton{ "Load" }; // Load button with a label
     TextButton resetButton{ "Reset" }; // Reset button with a label
 
+    Label speedTitle;
+    Label pitchTitle;
+    Label volumeTitle;
+    Label reverbTitle;
+
     TextButton pitchToggleButton{}; // A text button for toggling pitch adjustment
 
     Slider volumeSlider; // Volume slider

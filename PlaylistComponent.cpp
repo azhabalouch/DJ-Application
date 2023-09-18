@@ -29,20 +29,20 @@ PlaylistComponent::PlaylistComponent(AudioFormatManager& _formatManager)
     /************************************************************************************************************************/
 
     addAndMakeVisible(tableComponent);
+    tableComponent.setColour(TableListBox::backgroundColourId, Colour::fromRGB(40, 40, 40));
+    tableComponent.getHeader().setColour(TableHeaderComponent::backgroundColourId, Colours::grey);
+    tableComponent.getHeader().setColour(TableHeaderComponent::textColourId, Colour::fromRGB(255, 215, 0));
     tableComponent.setModel(this);
-    tableComponent.setVisible(false);
 
     tableComponent.getHeader().addColumn("Track title", 1, 265);
     tableComponent.getHeader().addColumn("Left Deck", 2, 60);
     tableComponent.getHeader().addColumn("Right Deck", 3, 60);
     tableComponent.getHeader().addColumn("Delete", 4, 40);
 
-    addAndMakeVisible(editButton);
-    editButton.setLookAndFeel(&buttonTheme);
-    editButton.addListener(this);
-
     addAndMakeVisible(searchField);
-    searchField.setVisible(false);
+    searchField.setColour(TextEditor::textColourId, Colour::fromRGB(255, 215, 0)); // Gold text
+    searchField.setColour(TextEditor::backgroundColourId, Colour::fromRGB(0, 0, 0)); // Gold text
+    searchField.setColour(TextEditor::outlineColourId, Colour::fromRGB(255, 215, 0)); // Gold outline
     searchField.addListener(this);
 }
 
@@ -65,15 +65,8 @@ void PlaylistComponent::resized()
 {
     backgroundImageComponent.setBounds(getLocalBounds());
 
-    int buttonH = 50;
-    int buttonW = 90;
-    int buttonX = getWidth() / 2 - buttonW / 2;
-    int buttonY = (getHeight() / 8) * 5;
-    int paddingH = 30;
-    int paddingW = 50;
     int padding = 10;
 
-    editButton.setBounds(buttonX - 2 * paddingW, buttonY + paddingH, buttonW, buttonH);
     searchField.setBounds(padding, (getHeight() / 8) * 6 + 10, getWidth() - (2 * padding), 25);
     tableComponent.setBounds(padding, (getHeight() / 5) * 4, getWidth() - (2 * padding), getHeight() / 5 - padding);
 }
@@ -86,14 +79,16 @@ int PlaylistComponent::getNumRows()
 
 void PlaylistComponent::paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
 {
+    Colour gold(255, 215, 0);
+
     // Just highlight selected rows
     if (rowIsSelected)
     {
-        g.fillAll(Colours::orange);
+        g.fillAll(gold);
     }
     else
     {
-        g.fillAll(Colours::darkgrey);
+        g.fillAll(Colours::black);
     }
 }
 
@@ -114,6 +109,7 @@ void PlaylistComponent::paintCell(Graphics& g, int rowNumber, int columnId, int 
         }
     }
 
+    g.setColour(Colours::white); // Set text color to white
     g.drawText(trackTitle, 2, 0, width - 4, height, Justification::centredLeft, true);
 
 }
@@ -131,6 +127,11 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 
             String id{ std::to_string(rowNumber) };
             btn->setComponentID(id);
+
+            // Customize button appearance
+            btn->setColour(TextButton::buttonColourId, Colour::fromRGB(0, 0, 0)); // Black background
+            btn->setColour(TextButton::textColourOffId, Colour::fromRGB(255, 215, 0)); // Gold text
+            btn->setColour(ComboBox::outlineColourId, Colour::fromRGB(255, 215, 0)); // Gold outline
         }
     }
     if (columnId == 3)
@@ -143,6 +144,11 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 
             String id{ std::to_string(rowNumber) };
             btn->setComponentID(id);
+
+            // Customize button appearance
+            btn->setColour(TextButton::buttonColourId, Colour::fromRGB(0, 0, 0)); // Black background
+            btn->setColour(TextButton::textColourOffId, Colour::fromRGB(255, 215, 0)); // Gold text
+            btn->setColour(ComboBox::outlineColourId, Colour::fromRGB(255, 215, 0)); // Gold outline
         }
     }
     if (columnId == 4)
@@ -155,6 +161,12 @@ Component* PlaylistComponent::refreshComponentForCell(int rowNumber, int columnI
 
             String id{ std::to_string(rowNumber) };
             btn->setComponentID(id);
+
+            // Customize button appearance
+            btn->setColour(TextButton::buttonColourId, Colour::fromRGB(0, 0, 0)); // Black background
+            btn->setColour(TextButton::textColourOffId, Colour::fromRGB(255, 215, 0)); // Gold text
+            btn->setColour(ComboBox::outlineColourId, Colour::fromRGB(255, 215, 0)); // Gold outline
+
         }
     }
     return existingComponentToUpdate;
@@ -171,64 +183,42 @@ void PlaylistComponent::cellClicked(int rowNumber, int columnId, const MouseEven
 
 void PlaylistComponent::buttonClicked(Button* button)
 {
-    if (button == &editButton)
-    {
-        if (tableComponent.isVisible())
-        {
-            tableComponent.setVisible(false);
-            searchField.setVisible(false);
-            editButton.setButtonText("Edit");
-        }
-        else
-        {
-            tableComponent.setVisible(true);
-            searchField.setVisible(true);
-            editButton.setButtonText("Done");
-        }
+    int id = std::stoi(button->getComponentID().toStdString());
 
-        searchField.clear();
-        searchQuery = "";
-        tableComponent.updateContent();
+    // Check if the ID is within the range of storedFiles
+    if (id >= 0 && id < static_cast<int>(storedFiles.size()))
+    {
+        String filePath = storedFiles[id];
+
+        // Create a File object from the file path
+        File audioFile = File(filePath);
+
+        // Convert the file to a URL
+        URL audioURL = URL(audioFile);
+
+        // Load the track into the appropriate deck based on which button was clicked
+        if (button->getButtonText() == "Add L")
+        {
+            player1->loadURL(audioURL);
+
+            deck1->updateWaveform(audioURL);
+        }
+        else if (button->getButtonText() == "Add R")
+        {
+            player2->loadURL(audioURL);
+
+            deck2->updateWaveform(audioURL);
+        }
     }
-    else
+
+    // Check if the button label is "X"
+    if (button->getButtonText() == "X")
     {
-        int id = std::stoi(button->getComponentID().toStdString());
-
-        // Check if the ID is within the range of storedFiles
-        if (id >= 0 && id < static_cast<int>(storedFiles.size()))
+        if (id >= 0 && id < static_cast<int>(trackTitles.size()) && id < static_cast<int>(storedFiles.size()))
         {
-            String filePath = storedFiles[id];
-
-            // Create a File object from the file path
-            File audioFile = File(filePath);
-
-            // Convert the file to a URL
-            URL audioURL = URL(audioFile);
-
-            // Load the track into the appropriate deck based on which button was clicked
-            if (button->getButtonText() == "Add L")
-            {
-                player1->loadURL(audioURL);
-
-                deck1->updateWaveform(audioURL);
-            }
-            else if (button->getButtonText() == "Add R")
-            {
-                player2->loadURL(audioURL);
-
-                deck2->updateWaveform(audioURL);
-            }
-        }
-
-        // Check if the button label is "X"
-        if (button->getButtonText() == "X")
-        {
-            if (id >= 0 && id < static_cast<int>(trackTitles.size()) && id < static_cast<int>(storedFiles.size()))
-            {
-                trackTitles.erase(trackTitles.begin() + id);
-                storedFiles.erase(storedFiles.begin() + id);
-                tableComponent.updateContent();
-            }
+            trackTitles.erase(trackTitles.begin() + id);
+            storedFiles.erase(storedFiles.begin() + id);
+            tableComponent.updateContent();
         }
     }
 }
@@ -295,12 +285,6 @@ bool PlaylistComponent::containsIgnoreCase(const std::string& str, const std::st
 
     return (it != strEnd);
 }
-
-//void PlaylistComponent::onTrackLoaded(const String& trackName)
-//{
-//    trackTitles.push_back(trackName.toStdString());
-//    tableComponent.updateContent();
-//}
 
 void PlaylistComponent::onTrackLoaded(const String& _trackTitle, const String& _storedFiles)
 {

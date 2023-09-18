@@ -92,7 +92,6 @@ private:
 
     ButtonTheme buttonTheme;
 
-    TextButton editButton{ "Edit" };
     TextEditor searchField;
 
     String searchQuery;

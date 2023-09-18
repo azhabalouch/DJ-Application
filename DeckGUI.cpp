@@ -38,6 +38,9 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer,
     backgroundImageComponent.setImagePlacement(RectanglePlacement::stretchToFit); // Set image placement
     addAndMakeVisible(backgroundImageComponent); // Add the background image component to the GUI
 
+    // Custom colour
+    Colour lightGold(241, 229, 172);
+
     // On or Off toggle button
 
     addAndMakeVisible(pitchToggleButton); // Add the pitchToggleButton to the GUI
@@ -57,6 +60,12 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer,
     pitchSlider.setValue(1.0); // Set the initial value of the pitch slider
     pitchSlider.addListener(this); // Add the DeckGUI as a listener for slider events
 
+    addAndMakeVisible(pitchTitle);
+    pitchTitle.setFont(Font("Metroscript", 20.0f, Font::bold));
+    pitchTitle.setText("Pitch", dontSendNotification);
+    pitchTitle.setColour(Label::textColourId, lightGold);
+    pitchTitle.setJustificationType(Justification::centred);
+
     // Volume Slider
 
     addAndMakeVisible(volumeSlider); // Add the volumeSlider to the GUI
@@ -68,6 +77,12 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer,
     volumeSlider.setRange(0.0, 10.0); // Set the range of the volume slider
     volumeSlider.setValue(1.0); // Set the initial value of the volume slider
     volumeSlider.addListener(this); // Add the DeckGUI as a listener for slider events
+
+    addAndMakeVisible(volumeTitle);
+    volumeTitle.setFont(Font("Metroscript", 20.0f, Font::bold));
+    volumeTitle.setText("Volume", dontSendNotification);
+    volumeTitle.setColour(Label::textColourId, lightGold);
+    volumeTitle.setJustificationType(Justification::centred);
 
     // Speed Slider
 
@@ -81,6 +96,13 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer,
     speedSlider.setValue(1.0); // Set the initial value of the speed slider
     speedSlider.addListener(this); // Add the DeckGUI as a listener for slider events
 
+    addAndMakeVisible(speedTitle);
+    speedTitle.setFont(Font("Metroscript", 20.0f, Font::bold));
+    speedTitle.setText("Speed", dontSendNotification);
+    speedTitle.setColour(Label::textColourId, lightGold);
+    speedTitle.setJustificationType(Justification::centred);
+
+
     // Reverb Slider
 
     addAndMakeVisible(reverbSlider); // Add the reverbSlider to the GUI
@@ -92,6 +114,12 @@ DeckGUI::DeckGUI(DjAudioPlayer* _djAudioPlayer,
     reverbSlider.setRange(0.0, 1.0, 0.01); // Set the range of the reverb slider
     reverbSlider.setValue(0.0);  // Set the initial value of the reverb slider
     reverbSlider.addListener(this); // Add the DeckGUI as a listener for slider events
+
+    addAndMakeVisible(reverbTitle);
+    reverbTitle.setFont(Font("Metroscript", 20.0f, Font::bold));
+    reverbTitle.setText("Reverb", dontSendNotification);
+    reverbTitle.setColour(Label::textColourId, lightGold);
+    reverbTitle.setJustificationType(Justification::centred);
 
     // Waveform Display
 
@@ -152,8 +180,8 @@ void DeckGUI::resized()
 
     // Define various layout parameters for GUI components
     int rowH = getHeight() / 8; // Calculate the height of a row
-    int buttonH = 40; // Set the height of buttons
-    int buttonW = 80; // Set the width of buttons
+    int buttonH = 50; // Set the height of buttons
+    int buttonW = 90; // Set the width of buttons
     int buttonX = getWidth() / 2 - buttonW / 2; // Calculate the horizontal position for buttons
     int buttonY = rowH * 6; // Calculate the vertical position for buttons
     int paddingH = 50; // Vertical padding value
@@ -172,15 +200,24 @@ void DeckGUI::resized()
     // Set the bounds for various GUI components
     waveformDisplay.setBounds(wavePadding - 5, wavePadding, getWidth() - (wavePadding + 10), (rowH * 2) - wavePadding); // Set bounds for the waveform display
     positionSlider.setBounds(wavePadding - 5, rowH * 2 + 15, getWidth() - (wavePadding + 2), pSliderH); // Set bounds for the position slider
-    speedSlider.setBounds(SliderX, SliderY, rotateSlideW, rotateSlideH); // Set bounds for the speed slider
+    
+    volumeTitle.setBounds(SliderX - 90, SliderY + 200, 70, 40);
+    volumeSlider.setBounds(SliderX - 75, SliderY, BarSliderW, BarSliderH); // Set bounds for the volume slider
+
+    reverbTitle.setBounds(SliderX - 160, SliderY + 200, 70, 40);
+    reverbSlider.setBounds(SliderX - 145, SliderY, BarSliderW, BarSliderH); // Set bounds for the reverb slider
+
+    playButton.setBounds(buttonX - buttonW + 20, buttonY + 35, buttonW, buttonH); // Set bounds for the play button
+    stopButton.setBounds(buttonX + paddingW + 10, buttonY + 35, buttonW, buttonH); // Set bounds for the stop button
+    loadButton.setBounds(buttonX - buttonW + 20, buttonY + 2*paddingH, buttonW, buttonH); // Set bounds for the load button
+    resetButton.setBounds(buttonX + paddingW + 10, buttonY + 2*paddingH, buttonW, buttonH); // Set bounds for the load button
+
+    speedTitle.setBounds(SliderX + 70, SliderY + 20, rotateSlideW, rotateSlideH);
+    speedSlider.setBounds(SliderX, SliderY - 20, rotateSlideW, rotateSlideH); // Set bounds for the speed slider
+
+    pitchTitle.setBounds(SliderX + 70, SliderY + 165, rotateSlideW, rotateSlideH);
     pitchSlider.setBounds(SliderX, SliderY + 125, rotateSlideW, rotateSlideH); // Set bounds for the pitch slider
     pitchToggleButton.setBounds(SliderX + 100, SliderY + 175, tButtonW, tButtonH); // Set bounds for the pitch toggle button
-    volumeSlider.setBounds(SliderX - 75, SliderY, BarSliderW, BarSliderH); // Set bounds for the volume slider
-    reverbSlider.setBounds(SliderX - 125, SliderY, BarSliderW, BarSliderH); // Set bounds for the reverb slider
-    playButton.setBounds(buttonX - buttonW, buttonY, buttonW, buttonH); // Set bounds for the play button
-    stopButton.setBounds(buttonX + paddingW, buttonY, buttonW, buttonH); // Set bounds for the stop button
-    loadButton.setBounds(buttonX - buttonW, buttonY + 2*paddingH, buttonW, buttonH); // Set bounds for the load button
-    resetButton.setBounds(buttonX + paddingW, buttonY + 2*paddingH, buttonW, buttonH); // Set bounds for the load button
 }
 
 void DeckGUI::buttonClicked(Button* button)

@@ -36,7 +36,7 @@ public:
 
         g.setColour(lightGold); //This line sets the color used for drawing the button's text to the previously defined `lightGold` color.
 
-        g.setFont(Font("Metroscript", 40.0f, Font::bold)); //This sets the font for the button's text. It uses the "Metroscript" font with a size of 40.0 and sets it to bold.
+        g.setFont(Font("Metroscript", 30.0f, Font::bold)); //This sets the font for the button's text. It uses the "Metroscript" font with a size of 40.0 and sets it to bold.
 
         //Finally, this line uses the `Graphics` object to draw the button's text. It uses the text obtained from `button.getButtonText()`, the bounds of the button, and centers the text within those bounds.
         g.drawText(button.getButtonText(), button.getLocalBounds(), Justification::centred);
